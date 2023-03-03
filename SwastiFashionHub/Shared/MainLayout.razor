@@ -1,19 +1,36 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
 <PageTitle>SwastiFashionHub</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<!-- Begin page -->
+<div id="layout-wrapper">
+    <TopBar />
+    <SideBar />
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                @Body
+            </div>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <Footer></Footer>
+    </div>
+
 </div>
+
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(1).ContinueWith(async T =>
+            {
+                // Do work to load page data and set properties
+                await JSRuntime.InvokeVoidAsync("init");
+            });
+        }
+    }
+}

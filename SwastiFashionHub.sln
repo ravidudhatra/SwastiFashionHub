@@ -5,13 +5,11 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub", "SwastiFashionHub\SwastiFashionHub.csproj", "{7880A102-103B-44A8-94FB-B5C37B756BE5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{02811117-FDB7-4F6B-BE7D-7256E06E54AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.WebApi", "SwastiFashionHub.WebApi\SwastiFashionHub.WebApi.csproj", "{99CD39C5-8929-49F0-9753-AB7C14F1456D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwastiFashionHub.WebApi", "SwastiFashionHub.WebApi\SwastiFashionHub.WebApi.csproj", "{99CD39C5-8929-49F0-9753-AB7C14F1456D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.Core", "SwastiFashionHub.Core\SwastiFashionHub.Core.csproj", "{718F2849-BF94-4DA4-B537-F60098AB02DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwastiFashionHub.Core", "SwastiFashionHub.Core\SwastiFashionHub.Core.csproj", "{718F2849-BF94-4DA4-B537-F60098AB02DD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwastiFashionHub.Data", "SwastiFashionHub.Data\SwastiFashionHub.Data.csproj", "{C1EB3A6A-1A79-45DA-8038-A30164F6711B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.Data", "SwastiFashionHub.Data\SwastiFashionHub.Data.csproj", "{C1EB3A6A-1A79-45DA-8038-A30164F6711B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

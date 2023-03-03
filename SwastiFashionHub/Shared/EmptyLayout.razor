@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+
+@inject IJSRuntime JSRuntime
+
+@Body
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1).ContinueWith(async T =>
+        {
+            // Do work to load page data and set properties
+            await JSRuntime.InvokeVoidAsync("initAuthBackground");
+        });
+
+    }
+}

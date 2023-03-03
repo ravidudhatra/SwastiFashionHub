@@ -1,0 +1,16 @@
+﻿[
+  {
+    "outputFile": "wwwroot/assets/css/app.css",
+    "inputFile": "wwwroot/assets/scss/app.scss"
+  },
+
+  {
+    "outputFile": "wwwroot/assets/css/icons.css",
+    "inputFile": "wwwroot/assets/scss/icons.scss"
+  },
+
+  {
+    "outputFile": "wwwroot/assets/css/bootstrap.css",
+    "inputFile": "wwwroot/assets/scss/bootstrap.scss"
+  }
+]
