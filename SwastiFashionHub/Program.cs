@@ -1,11 +1,20 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using SwastiFashionHub.Core.Services;
+using SwastiFashionHub.Shared.Core.Services;
+using SwastiFashionHub.Shared.Core.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+
+builder.Services.AddScoped<IDesignService, DesignService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+
+
 
 var app = builder.Build();
 

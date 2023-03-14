@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SwastiFashionHub.Core.Services.Interface;
 using SwastiFashionHub.Data.Context;
+using SwastiFashionHub.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace SwastiFashionHub.Core.Services
         public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateAsync(T entity)
+        {
+            _context.Set<T>().Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 

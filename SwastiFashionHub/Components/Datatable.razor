@@ -1,0 +1,86 @@
+﻿@typeparam T
+
+@using Microsoft.AspNetCore.Components.Web
+@using Newtonsoft.Json
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Components;
+@using SwastiFashionHub.Shared.Core.Models;
+@inject IJSRuntime JsRuntime
+
+<div class="table-responsive">
+    <table id="@TableId" class="table table-bordered dt-responsive nowrap">
+        <thead>
+            <tr>
+                @foreach (var col in Columns)
+                {
+                    <th>@col.Title</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @*@if (Data != null && Data.Count > 0)
+            {
+                @foreach (var row in Data)
+                {
+                    <tr>
+                        @foreach (var column in Columns)
+                        {
+                            <td>@GetCellValue(row, column.Field)</td>
+                        }
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="@ColSpanCount">No data found!</td>
+                </tr>
+            }*@
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<ColumnDefinition> Columns { get; set; } = new List<ColumnDefinition>();
+
+    [Parameter]
+    public List<T>? Data { get; set; }
+
+    [Parameter]
+    public bool EnableSorting { get; set; } = true;
+
+    [Parameter]
+    public bool EnableFiltering { get; set; } = true;
+
+    [Parameter]
+    public bool EnablePagination { get; set; } = true;
+
+    private int ColSpanCount { get; set; }
+
+    private string TableId = Guid.NewGuid().ToString();
+
+    private object GetCellValue(T row, string field)
+    {
+        var property = row.GetType().GetProperty(field);
+        if (property != null)
+            return property.GetValue(row);
+        return null;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var options = new
+            {
+                paging = EnablePagination,
+                searching = EnableFiltering,
+                ordering = EnableSorting
+            };
+
+            await JsRuntime.InvokeAsync<object>("dataTable.init", TableId, Columns, Data, options);
+        }
+    }
+}

@@ -1,12 +1,4 @@
-﻿/*
-Template Name: Minible - Admin & Dashboard Template
-Author: Themesbrand
-Version: 2.4.0
-Website: https://themesbrand.com/
-Contact: themesbrand@gmail.com
-File: Main Css File
-*/
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
 :root {
   --bs-sidebar-bg: #ffffff;
   --bs-sidebar-menu-item-color: #7b8190;
