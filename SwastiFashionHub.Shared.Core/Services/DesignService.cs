@@ -3,13 +3,13 @@ using SwastiFashionHub.Shared.Core.Services.Interface;
 using SwastiFashionHub.Shared.Core.Exceptions;
 using SwastiFashionHub.Data.Models;
 
-namespace SwastiFashionHub.Core.Services
+namespace SwastiFashionHub.Shared.Core.Services
 {
     public class DesignService : IDesignService
     {
         private readonly IHttpService httpService;
         private readonly string baseURL = "api/Designs";
-        public DesignService(HttpService httpService)
+        public DesignService(IHttpService httpService)
         {
             this.httpService = httpService;
         }

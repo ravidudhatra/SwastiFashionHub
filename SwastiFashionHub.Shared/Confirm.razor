@@ -1,0 +1,17 @@
+﻿@if (ConfirmServiceModel != null && !string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName))
+{
+    <div class="confirmchanges-frame">
+        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.Message))
+        {
+            <label class="confirmchanges-message">@ConfirmServiceModel.Message</label>
+        }
+        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.DiscardButtonName) && ConfirmServiceModel.DiscardButton != null)
+        {
+            <button type="button" class="ml-3 btn btn-outline-light d-inline text-light" @onclick="@ConfirmServiceModel.DiscardButton">@ConfirmServiceModel.DiscardButtonName</button>
+        }
+        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName) && ConfirmServiceModel.SaveButton != null)
+        {
+            <button type="button" class="ml-3 btn btn-success d-inline" @onclick="@ConfirmServiceModel.SaveButton">@ConfirmServiceModel.SaveButtonName</button>
+        }
+    </div>
+}

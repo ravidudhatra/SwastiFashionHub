@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SwastiFashionHub.Core\SwastiFashionHub.Core.csproj" />
-    <ProjectReference Include="..\SwastiFashionHub.Data\SwastiFashionHub.Data.csproj" />
   </ItemGroup>
 
 </Project>

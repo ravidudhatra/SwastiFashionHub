@@ -1,0 +1,30 @@
+﻿@inject SwastiFashionHub.Shared.Core.Services.SpinnerService SpinnerService
+
+@if(IsVisible)
+{
+    <div class="spinner">
+       
+    </div>
+}
+
+@code {
+    
+    protected bool IsVisible { get; set; }
+    protected override void OnInitialized()
+    {
+        SpinnerService.OnShow += ShowSpinner;
+        SpinnerService.OnHide += HideSpinner;
+    }
+
+    public void ShowSpinner()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    public void HideSpinner()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

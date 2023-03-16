@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SwastiFashionHub.Core.Services
+namespace SwastiFashionHub.Shared.Core.Services
 {
     public class AlertService : IAlertService
     {

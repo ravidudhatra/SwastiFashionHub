@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SwastiFashionHub.Shared.Core.Models;
 using SwastiFashionHub.Shared.Core.Services.Interface;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace SwastiFashionHub.Pages.Master
@@ -29,7 +30,17 @@ namespace SwastiFashionHub.Pages.Master
 
             PropertyInfo[] properties = typeof(DesignViewModel).GetProperties();
             foreach (var property in properties)
-                Columns.Add(new ColumnDefinition { Title = property.Name, Field = property.Name });
+            {
+                string displayName = property.Name;
+                //var propInfo = typeof(DesignViewModel).GetProperty("Name");
+                //var displayNameAttribute = propInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false);
+                
+                //if (displayNameAttribute.Count() > 0)
+                //    displayName = (displayNameAttribute[0] as DisplayNameAttribute).DisplayName;
+
+                Columns.Add(new ColumnDefinition { Title = displayName, Field = property.Name });
+            }
+
 
             var designData = await DesignService.GetAll();
 
@@ -41,6 +52,8 @@ namespace SwastiFashionHub.Pages.Master
                 Name = x.Name,
                 Note = x.Note
             }).ToList();
+
+            StateHasChanged();
         }
     }
 }
