@@ -1,0 +1,25 @@
+.alert {
+    background-color: $black-russin;
+    color: $white;
+    border-color: $black-russin;
+    position: absolute;
+    z-index: 99;
+    height: 50px;
+    width: 320px;
+    bottom: 30px;
+    right: 180px;
+  
+    p {
+      font-size: 18px;
+      font-weight: 400;
+      color: $white;
+      margin-top: 7px;
+      position: relative;
+  
+      i {
+        position: absolute;
+        padding: 0 10px;
+        font-size: 20px;
+      }
+    }
+  }

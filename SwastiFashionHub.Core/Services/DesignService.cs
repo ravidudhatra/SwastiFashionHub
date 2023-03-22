@@ -23,6 +23,49 @@ namespace SwastiFashionHub.Core.Services
         }
 
 
+        public async Task<Result<int>> SaveDesignAsync(Design design)
+        {
+            try
+            {
+                if (_context.Designs == null)
+                    return await Result<int>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                design.CreatedDate = DateTime.Now;
+                design.CreatedBy = 0; //todo: get logged in user id and set it.
+
+                _context.Designs.Add(design);
+
+                await _context.SaveChangesAsync();
+
+                return await Result<int>.SuccessAsync(design.Id, "Design saved successfully");
+            }
+            catch (Exception ex)
+            {
+                return await Result<int>.FailAsync("Failed");
+            }
+        }
+
+        public async Task<Result<int>> UpdateDesignAsync(Design design)
+        {
+            try
+            {
+                if (_context.Designs == null)
+                    return await Result<int>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                design.UpdatedDate = DateTime.Now;
+                design.UpdatedBy = 0; //todo: get logged in user id and set it.
+
+                _context.Entry(design).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return await Result<int>.SuccessAsync(design.Id, "Design updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return await Result<int>.FailAsync("Failed");
+            }
+        }
+        
         public async Task<Result<Design>> GetDesignAsync(int id)
         {
             try

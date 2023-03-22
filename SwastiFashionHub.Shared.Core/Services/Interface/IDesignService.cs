@@ -10,7 +10,7 @@ namespace SwastiFashionHub.Shared.Core.Services.Interface
     public interface IDesignService
     {
         Task<List<Design>> GetAll();
-        Task<bool> Post(Design design);
-        Task<bool> Put(Design updatedesign);
+        Task<bool> Add(Design design);
+        Task<bool> Update(Design updatedesign);
     }
 }

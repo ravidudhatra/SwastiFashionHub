@@ -1,15 +1,34 @@
-﻿@inherits LayoutComponentBase
+﻿@using SwastiFashionHub.Shared.Core.Configuration;
+@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 
 <PageTitle>SwastiFashionHub</PageTitle>
 
 <!-- Begin page -->
 <div id="layout-wrapper">
-    <Spinner/>
+    <Toasts Position="ToastPosition.TopRight"
+            Timeout="10"
+            IconType="IconType.Blazored"
+            ErrorIcon="error_outline"
+            InfoIcon="school"
+            SuccessIcon="done_outline"
+            WarningIcon="warning"
+            ShowProgressBar="@true"
+            ShowCloseButton="@true">
+        <CloseButtonContent>
+            <div>
+                <span class="myCloseButtonStyleClass">&times;</span>
+            </div>
+        </CloseButtonContent>
+    </Toasts>
+
+
+    <Spinner />
     <TopBar />
     <SideBar />
 
     <div class="main-content">
+
         <div class="page-content">
             <div class="container-fluid">
                 @Body

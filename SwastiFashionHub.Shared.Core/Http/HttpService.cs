@@ -1,19 +1,9 @@
 ﻿
-using Azure;
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-
 using Newtonsoft.Json;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using SwastiFashionHub.Shared.Core.Services.Interface;
 using SwastiFashionHub.Shared.Core.Common;
 
@@ -167,7 +157,7 @@ namespace SwastiFashionHub.Shared.Core.Http
 
             try
             {
-                if (Constants.UNAUTHORIZEDAPI.Any(a => apiURL.Contains(a)))
+                if (Constants.ANONYMOUSAPI.Any(a => apiURL.Contains(a)))
                 {
                     return await _httpClient.SendAsync(request, cancellationToken);
                 }

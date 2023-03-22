@@ -1,7 +1,26 @@
-﻿@inherits LayoutComponentBase
+﻿@using SwastiFashionHub.Shared.Core.Configuration;
+@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 
 <div class="account-pages my-5 pt-sm-5">
+    <Toasts Position="ToastPosition.TopRight"
+            Timeout="10"
+            IconType="IconType.Blazored"
+            ErrorIcon="error_outline"
+            InfoIcon="school"
+            SuccessIcon="done_outline"
+            WarningIcon="warning"
+            ShowProgressBar="@true"
+            ShowCloseButton="@true">
+        <CloseButtonContent>
+            <div>
+                <span class="myCloseButtonStyleClass">&times;</span>
+            </div>
+        </CloseButtonContent>
+    </Toasts>
+    
+    <Spinner />
+
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -23,7 +42,7 @@
 
                 <div class="mt-5 text-center">
                     <p>
-                        @FullYear © Minible. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand
+                        @FullYear © Swasti Fashion Hub
                     </p>
                 </div>
 
@@ -32,6 +51,9 @@
         <!-- end row -->
     </div>
     <!-- end container -->
+
+    <Alert />
+    <Confirm />
 </div>
 
 

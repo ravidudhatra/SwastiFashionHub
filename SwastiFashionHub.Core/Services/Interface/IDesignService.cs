@@ -12,5 +12,7 @@ namespace SwastiFashionHub.Core.Services.Interface
     {
         Task<Result<Design>> GetDesignAsync(int id);
         Task<Result<List<Design>>> GetAllDesignAsync(string search = "");
+        Task<Result<int>> SaveDesignAsync(Design design);
+        Task<Result<int>> UpdateDesignAsync(Design design);
     }
 }

@@ -40,56 +40,26 @@ namespace SwastiFashionHub.WebApi.Controllers
             return Ok(result);
         }
 
-        //// PUT: api/Designs/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutDesign(int id, Design design)
-        //{
-        //    if (id != design.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        // PUT: api/Designs/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDesign(int id, Design design)
+        {
 
-        //    _context.Entry(design).State = EntityState.Modified;
+            var result = await _designService.UpdateDesignAsync(design);
+            return CreatedAtAction("GetDesign", new { id = result }, design);
+        }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!DesignExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return await Result<int>.FailAsync("Failed");
-        //    }
+        // POST: api/Designs
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Design>> PostDesign(Design design)
+        {
 
-        //    return await Result<Guid>.SuccessAsync(updateCompanyByAdminCommand.Id, "Company saved successfully");
-        //    return Ok(Result)
-        //}
+            var result = await _designService.SaveDesignAsync(design);
 
-        //// POST: api/Designs
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Design>> PostDesign(Design design)
-        //{
-        //    if (_context.Designs == null)
-        //    {
-        //        return Problem("Entity set 'SwastiFashionHubLlpContext.Designs'  is null.");
-        //    }
-        //    _context.Designs.Add(design);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetDesign", new { id = design.Id }, design);
-        //}
+            return CreatedAtAction("GetDesign", new { id = result }, design);
+        }
 
         //// DELETE: api/Designs/5
         //[HttpDelete("{id}")]

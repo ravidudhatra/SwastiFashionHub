@@ -4,6 +4,7 @@
 // custom-variables
 //
 
+
 // Vertical Sidebar  Light
 $sidebar-bg: var(--#{$variable-prefix}sidebar-bg);
 $sidebar-menu-item-color: var(--#{$variable-prefix}sidebar-menu-item-color);
@@ -88,6 +89,7 @@ $btn-close-bg-dark:          url("data:image/svg+xml,<svg xmlns='http://www.w3.o
 // Color system
 
 // scss-docs-start gray-color-variables
+$black-russin: #202123;
 $white:    #fff;
 $gray-100: #f8f9fa;
 $gray-200: #f5f6f8;

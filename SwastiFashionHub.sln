@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.Data", "Sw
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2D12EBE1-7A20-4C70-AA8C-54DCAFD61ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwastiFashionHub.Shared.Core", "SwastiFashionHub.Shared.Core\SwastiFashionHub.Shared.Core.csproj", "{678F021D-B6B6-4BF7-954A-017E89C6F319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.Shared.Core", "SwastiFashionHub.Shared.Core\SwastiFashionHub.Shared.Core.csproj", "{678F021D-B6B6-4BF7-954A-017E89C6F319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwastiFashionHub.Shared", "SwastiFashionHub.Shared\SwastiFashionHub.Shared.csproj", "{E3FF5335-BD1C-488F-8F7B-738FBE9880AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwastiFashionHub.Shared", "SwastiFashionHub.Shared\SwastiFashionHub.Shared.csproj", "{E3FF5335-BD1C-488F-8F7B-738FBE9880AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

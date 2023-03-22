@@ -26,7 +26,7 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<bool> Post(Design design)
+        public async Task<bool> Add(Design design)
         {
             var httpResponse = await httpService.Post<Design, bool>($"{baseURL}", design);
             var result = await httpResponse.GetResult();
@@ -38,7 +38,7 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<bool> Put(Design updatedesign)
+        public async Task<bool> Update(Design updatedesign)
         {
             var httpResponse = await httpService.Put<Design, bool>($"{baseURL}/{updatedesign.Id}", updatedesign);
             var result = await httpResponse.GetResult();

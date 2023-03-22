@@ -8,6 +8,6 @@ namespace SwastiFashionHub.Shared.Core.Common
 {
     internal class Constants
     {
-        public static string[] UNAUTHORIZEDAPI = { };
+        public static string[] ANONYMOUSAPI = { };
     }
 }

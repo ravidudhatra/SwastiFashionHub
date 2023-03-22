@@ -393,3 +393,12 @@ function initMenus() {
     initRightSidebar();
 }
 
+
+//Spinner
+function hideSpinner() {
+    document.getElementById('spinner').classList.add("hide")
+}
+
+function showSpinner() {
+    document.getElementById('spinner').classList.remove("hide")
+}

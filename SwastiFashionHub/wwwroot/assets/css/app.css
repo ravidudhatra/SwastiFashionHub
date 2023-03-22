@@ -2624,6 +2624,14 @@ body[data-layout=horizontal][data-layout-size=boxed] .container-fluid, body[data
 /* =============
    Notification
 ============= */
+.frame-toast-manager .btn-danger {
+  background: #d82c0d;
+}
+
+.frame-toast-manager .btn-success {
+  background: #50b83c;
+}
+
 .toast-container {
   z-index: 1000;
 }
@@ -2703,6 +2711,46 @@ body[data-layout=horizontal][data-layout-size=boxed] .container-fluid, body[data
   border: 1px solid var(--bs-border-color);
 }
 
+.spin-loader h3 {
+  font-weight: 400;
+}
+
+.spinner {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 999999;
+}
+.spinner::after {
+  content: url(/_content/SwastiFashionHub.Shared/img/spinner.png);
+  transform-origin: 50% 47%;
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  -webkit-animation: spin 2s ease-in-out infinite;
+  animation: spin 2s ease-in-out infinite;
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .error {
   color: #f46a6a;
 }

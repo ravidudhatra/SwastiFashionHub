@@ -42,7 +42,7 @@ builder.Services.AddScoped(sp => new HttpClient
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IHttpService, HttpService>()
-    .AddScoped<ToastService>()
+    .AddScoped<IToastService, ToastService>()
     .AddScoped<LocalStorage>()
     .AddScoped<IConfirmService, ConfirmService>()
     .AddScoped<IAlertService, AlertService>()
