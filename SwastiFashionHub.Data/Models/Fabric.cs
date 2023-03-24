@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SwastiFashionHub.Data.Models;
 
 public partial class Fabric
 {
-    public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    [Required]
+    public string Name { get; set; }
 
     public DateTime CreatedDate { get; set; }
 

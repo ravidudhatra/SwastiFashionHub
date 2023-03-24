@@ -1,0 +1,37 @@
+﻿a {
+    padding: 7px 26px 7px 32px;
+    padding: 7px 24px;
+    background: #EB8233;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    min-width: 72px;
+    /*margin-right: 11px;*/
+}
+
+a:last-child{
+    margin-right: 0;
+}
+
+    a.primary {
+        background: #EB8233;
+    }
+
+    a.default {
+        background-color: #7C90AB;
+    }
+
+img {
+    margin-right: 7px;
+}
+
+p {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    color: #FFFFFF;
+    text-decoration: none;
+    margin: 0;
+}

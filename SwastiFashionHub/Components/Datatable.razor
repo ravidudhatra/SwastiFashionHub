@@ -18,24 +18,6 @@
             </tr>
         </thead>
         <tbody>
-            @*@if (Data != null && Data.Count > 0)
-            {
-                @foreach (var row in Data)
-                {
-                    <tr>
-                        @foreach (var column in Columns)
-                        {
-                            <td>@GetCellValue(row, column.Field)</td>
-                        }
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="@ColSpanCount">No data found!</td>
-                </tr>
-            }*@
         </tbody>
     </table>
 </div>

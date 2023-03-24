@@ -1,0 +1,24 @@
+﻿@*<header>
+	<div class="container">
+		<div class="sa-topbar">
+			<div class="sa-logo-links">
+				<img src="images/mt-admin.svg" alt="Logo">
+				<ul>
+					<li><a href="javascript:void(0)" @onclick=@(()=> NavigateTo("/"))>Home</a></li>
+					<li><a href="javascript:void(0)">About</a></li>
+				</ul>
+			</div>
+			<div class="sa-user-info">
+				<img src="images/message.svg" alt="Messages">
+				<img src="images/notification.svg" alt="Notifications">
+				<div class="user-profile">
+					<img src="images/avatar.svg" class="float-left" alt="User Avatar" @onclick=@Logout>
+					<div class="d-block overflow-hidden">
+						<h6>@UserName</h6>
+						<p>@UserSpeciality</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>*@

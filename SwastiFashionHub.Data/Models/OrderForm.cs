@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SwastiFashionHub.Data.Models;
 
 public partial class OrderForm
 {
-    public long Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-    public string JobNo { get; set; } = null!;
+    public string JobNo { get; set; }
 
-    public int PartyId { get; set; }
+    public Guid PartyId { get; set; }
 
     public int FabricType { get; set; }
 
@@ -21,10 +25,13 @@ public partial class OrderForm
 
     public int DesignNo { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
     public decimal Unit { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
     public decimal? TotalQty { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
     public decimal? TotalMtr { get; set; }
 
     public DateTime CreatedDate { get; set; }
@@ -37,5 +44,5 @@ public partial class OrderForm
 
     public bool IsArchived { get; set; }
 
-    public virtual ICollection<OrderFormDesignDetail> OrderFormDesignDetails { get; } = new List<OrderFormDesignDetail>();
+    public virtual ICollection<OrderFormDesignDetail> OrderFormDesignDetails { get; set; }
 }

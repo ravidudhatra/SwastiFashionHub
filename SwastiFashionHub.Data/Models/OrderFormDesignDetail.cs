@@ -1,17 +1,22 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SwastiFashionHub.Data.Models;
 
 public partial class OrderFormDesignDetail
 {
-    public long Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-    public long OrderFormId { get; set; }
+    public Guid OrderFormId { get; set; }
 
-    public string ColorCode { get; set; } = null!;
+    public string ColorCode { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
     public decimal? ColorQty { get; set; }
 
-    public virtual OrderForm OrderForm { get; set; } = null!;
+    public virtual OrderForm OrderForm { get; set; }
 }

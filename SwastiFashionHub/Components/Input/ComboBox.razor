@@ -1,0 +1,27 @@
+﻿@using SwastiFashionHub.Components.Core;
+@using SwastiFashionHub.Components.Display
+
+@typeparam TItem
+
+<div class="form-field">
+	<label for=@Id class="label @(Required ? "required" : "")">@Label</label>
+	<select id=@Id
+			name=@Id
+			class="form-select @(!isValid ?? false ? "invalid" : "")"
+			style="width: @Width;"
+			value=@Value
+			@onchange=@(e=> Change(e.Value.ToString()))
+			@onfocusout=@(()=>{if(isValid != null) Validate();})>
+		@if (Items is not null)
+		{
+			foreach (var item in Items)
+			{
+				<option value=@(Helper.GetPropertyValue<string>(item, ValueField))>
+					@(Helper.GetPropertyValue<string>(item, DisplayField))
+				</option>
+			}
+		}
+
+	</select>
+	<InputError Message=@errorMsg></InputError>
+</div>

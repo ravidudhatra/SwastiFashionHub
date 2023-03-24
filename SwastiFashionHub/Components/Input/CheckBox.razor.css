@@ -1,0 +1,22 @@
+﻿.form-field {
+    flex: 1;
+    margin-bottom: 5px;
+}
+
+.check-field label {
+    display: inline-block !important;
+    font-weight: normal !important;
+}
+
+.form-field label {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    color: #12161C;
+    display: block;
+}
+
+    .form-field label small {
+        font-weight: normal;
+    }

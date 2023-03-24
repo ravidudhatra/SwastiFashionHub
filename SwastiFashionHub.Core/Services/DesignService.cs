@@ -22,13 +22,12 @@ namespace SwastiFashionHub.Core.Services
             _context = dbContext;
         }
 
-
-        public async Task<Result<int>> SaveDesignAsync(Design design)
+        public async Task<Result<Guid>> SaveAsync(Design design)
         {
             try
             {
                 if (_context.Designs == null)
-                    return await Result<int>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
                 design.CreatedDate = DateTime.Now;
                 design.CreatedBy = 0; //todo: get logged in user id and set it.
@@ -37,20 +36,20 @@ namespace SwastiFashionHub.Core.Services
 
                 await _context.SaveChangesAsync();
 
-                return await Result<int>.SuccessAsync(design.Id, "Design saved successfully");
+                return await Result<Guid>.SuccessAsync(design.Id, "Design saved successfully");
             }
             catch (Exception ex)
             {
-                return await Result<int>.FailAsync("Failed");
+                return await Result<Guid>.FailAsync("Failed");
             }
         }
 
-        public async Task<Result<int>> UpdateDesignAsync(Design design)
+        public async Task<Result<Guid>> UpdateAsync(Design design)
         {
             try
             {
                 if (_context.Designs == null)
-                    return await Result<int>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
                 design.UpdatedDate = DateTime.Now;
                 design.UpdatedBy = 0; //todo: get logged in user id and set it.
@@ -58,15 +57,15 @@ namespace SwastiFashionHub.Core.Services
                 _context.Entry(design).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return await Result<int>.SuccessAsync(design.Id, "Design updated successfully");
+                return await Result<Guid>.SuccessAsync(design.Id, "Design updated successfully");
             }
             catch (Exception ex)
             {
-                return await Result<int>.FailAsync("Failed");
+                return await Result<Guid>.FailAsync("Failed");
             }
         }
-        
-        public async Task<Result<Design>> GetDesignAsync(int id)
+
+        public async Task<Result<Design>> GetAsync(Guid id)
         {
             try
             {
@@ -85,7 +84,7 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<List<Design>>> GetAllDesignAsync(string search = "")
+        public async Task<Result<List<Design>>> GetAllAsync(string search = "")
         {
             try
             {
@@ -107,6 +106,28 @@ namespace SwastiFashionHub.Core.Services
             catch (Exception ex)
             {
                 return await Result<List<Design>>.FailAsync("Failed");
+            }
+        }
+
+        public async Task<Result<Guid>> DeleteAsync(Guid id)
+        {
+            try
+            {
+                if (_context.Designs == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                var data = await _context.Designs.FindAsync(id);
+                if (data == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                _context.Designs.Remove(data);
+                await _context.SaveChangesAsync();
+
+                return await Result<Guid>.SuccessAsync(id, "Design deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return await Result<Guid>.FailAsync("Failed");
             }
         }
     }

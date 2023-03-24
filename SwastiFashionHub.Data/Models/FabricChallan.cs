@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SwastiFashionHub.Data.Models;
 
 public partial class FabricChallan
 {
-    public long Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-    public int PartyId { get; set; }
+    public Guid PartyId { get; set; }
 
-    public string ChallanNo { get; set; } = null!;
+    [Required]
+    public string ChallanNo { get; set; }
 
     public DateTime ChallanDate { get; set; }
 
-    public int FabricId { get; set; }
+    public Guid FabricId { get; set; }
 
     public int FabricType { get; set; }
 
-    public string TakaDetail { get; set; } = null!;
+    public string TakaDetail { get; set; }
 
     public string? ChallanImage { get; set; }
 

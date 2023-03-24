@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -28,62 +29,42 @@ namespace SwastiFashionHub.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDesigns()
         {
-            var result = await _designService.GetAllDesignAsync();
+            var result = await _designService.GetAllAsync();
             return Ok(result);
         }
 
         // GET: api/Designs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetDesign(int id)
+        public async Task<ActionResult<Design>> GetDesign(Guid id)
         {
-            var result = await _designService.GetDesignAsync(id);
+            var result = await _designService.GetAsync(id);
             return Ok(result);
         }
 
         // PUT: api/Designs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDesign(int id, Design design)
+        public async Task<IActionResult> PutDesign(Guid id, Design design)
         {
-
-            var result = await _designService.UpdateDesignAsync(design);
-            return CreatedAtAction("GetDesign", new { id = result }, design);
+            var result = await _designService.UpdateAsync(design);
+            return Ok(result);
         }
 
         // POST: api/Designs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Design>> PostDesign(Design design)
+        public async Task<IActionResult> PostDesign(Design design)
         {
-
-            var result = await _designService.SaveDesignAsync(design);
-
-            return CreatedAtAction("GetDesign", new { id = result }, design);
+            var result = await _designService.SaveAsync(design);
+            return Ok(result);
         }
 
-        //// DELETE: api/Designs/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteDesign(int id)
-        //{
-        //    if (_context.Designs == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var design = await _context.Designs.FindAsync(id);
-        //    if (design == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Designs.Remove(design);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool DesignExists(int id)
-        //{
-        //    return (_context.Designs?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
+        // DELETE: api/Designs/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDesign(Guid id)
+        {
+            var result = await _designService.DeleteAsync(id);
+            return Ok(result);
+        }
     }
 }

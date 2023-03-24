@@ -1,0 +1,24 @@
+﻿@using SwastiFashionHub.Components.Display
+
+<div class="form-field">
+	<div class="label-wrap">
+		<label for=@Id class="label @(Required ? "required" : "")">@Label</label>
+		@if (MaxLength > 0 && showCharacterStatus)
+		{
+			<span class="char-status">
+				@($"{MaxLength - Value.Length} characters remaining")
+			</span>
+		}
+	</div>
+	<input id=@Id
+		   name=@Id
+		   type="text"
+		   class="form-control @(!isValid ?? false ? "invalid" : "")"
+		   style="width: @Width;"
+		   value=@Value
+		   @onfocusin=@(()=> showCharacterStatus=true)
+		   @oninput=@(e=>Change(e.Value.ToString()))
+		   @onfocusout=@(()=>{showCharacterStatus=false; if(isValid != null) Validate();}) />
+
+	<InputError Message=@errorMsg></InputError>
+</div>

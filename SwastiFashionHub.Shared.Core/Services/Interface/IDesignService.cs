@@ -9,8 +9,10 @@ namespace SwastiFashionHub.Shared.Core.Services.Interface
 {
     public interface IDesignService
     {
+        Task<Design> Get(Guid id);
         Task<List<Design>> GetAll();
-        Task<bool> Add(Design design);
-        Task<bool> Update(Design updatedesign);
+        Task<object> Add(Design design);
+        Task<object> Update(Design updatedesign);
+        Task Delete(Guid id);
     }
 }

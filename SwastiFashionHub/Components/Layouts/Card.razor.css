@@ -1,0 +1,28 @@
+﻿.sa-single-card {
+    flex: 1;
+}
+
+.sa-single-card {
+    background: #FFFFFF;
+    border: 0.7px solid #7D90AB;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 14px 125px 9px 17px;
+    background: #DDE2E9;
+}
+
+    .card-header h3 {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: -0.02em;
+        color: #364254;
+        margin: 0;
+    }
+
+.card-body {
+    padding: 14px 30px 10px 17px;
+}

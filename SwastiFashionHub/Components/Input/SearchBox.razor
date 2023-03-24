@@ -1,0 +1,10 @@
+﻿<div class="ns-admin-search">
+	<form action="#" class="position-relative">
+		<input type="text" 
+			placeholder="Search Here" 
+			class="form-control"
+			   value=@Value
+			   @oninput=@(e=>Change(e.Value.ToString()))>
+		<img src="images/search-icon.svg" alt="Search Icon">
+	</form>
+</div>

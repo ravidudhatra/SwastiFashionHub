@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
 using SwastiFashionHub.Data.Models;
 using SwastiFashionHub.Shared.Core.Extensions;
 using SwastiFashionHub.Shared.Core.Helper;
@@ -16,10 +17,13 @@ namespace SwastiFashionHub.Pages.Master
         public IDesignService DesignService { get; set; }
 
         [Inject]
-        public IAlertService AlertService { get; set; }
+        public IToastService ToastService { get; set; }
 
         [Inject]
         public SpinnerService SpinnerService { get; set; }
+
+        [Inject]
+        public IConfirmService ConfirmService { get; set; }
 
         public string ErrorMessage { get; set; }
 
@@ -39,16 +43,17 @@ namespace SwastiFashionHub.Pages.Master
         {
             try
             {
-                await AlertService.Clear();
-                if (DesignModel.Id > 0)
+                ToastService.ClearAll();
+                if (DesignModel != null && DesignModel.Id != Guid.Empty)
                 {
                     await DesignService.Update(DesignModel);
-                    await AlertService.Success("Design save successfully.");
+                    ToastService.ShowSuccess("Design updated successfully.");
                 }
                 else
                 {
+                    DesignModel.Id = Guid.NewGuid();
                     await DesignService.Add(DesignModel);
-                    await AlertService.Success("Design updated successfully.");
+                    ToastService.ShowSuccess("Design save successfully.");
                 }
 
                 await BindDataAsync();
@@ -56,7 +61,7 @@ namespace SwastiFashionHub.Pages.Master
             }
             catch (Exception ex)
             {
-                await AlertService.Danger(ex.Message);
+                ToastService.ShowError(ex.Message);
             }
 
         }
@@ -93,7 +98,6 @@ namespace SwastiFashionHub.Pages.Master
             ItemsData = designData.Select(x => new DesignViewModel
             {
                 CreatedDate = x.CreatedDate,
-                DesignImage = x.DesignImage,
                 Id = x.Id,
                 Name = x.Name,
                 Note = x.Note
@@ -112,11 +116,6 @@ namespace SwastiFashionHub.Pages.Master
             ErrorMessage = string.Empty;
         }
 
-        /// <summary>
-        /// This function execute when fallback image and validate it
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
         private async Task OnInputFileChange(InputFileChangeEventArgs e)
         {
             ErrorMessage = string.Empty;
@@ -131,24 +130,23 @@ namespace SwastiFashionHub.Pages.Master
                     if (!FileUploadExtension.ImageExt.Contains(file.Name.GetFileExtensionFromUrl()))
                     {
                         ErrorMessage = "File should be an image.";
-                        await AlertService.Info(ErrorMessage);
+                        ToastService.ShowInfo(ErrorMessage);
                         return;
                     }
                     if (file.Size <= MaxFileSize)
                     {
-                        DesignModel.DesignImage = Convert.ToBase64String(ReadFully(file.OpenReadStream(file.Size)));
+                        //DesignModel.DesignImages = Convert.ToBase64String(ReadFully(file.OpenReadStream(file.Size)));
                     }
                     else
                     {
                         ErrorMessage = "Invalid file size. Max file size is 512kb";
-                        await AlertService.Info(ErrorMessage);
+                        ToastService.ShowInfo(ErrorMessage);
                     }
                 }
             }
             catch (Exception ex)
             {
-                await AlertService.Clear();
-                await AlertService.Warning("Unable to upload file");
+                ToastService.ShowError(ex.Message);
             }
             finally
             {
@@ -169,6 +167,41 @@ namespace SwastiFashionHub.Pages.Master
                 return ms.ToArray();
             }
         }
+
+
+        private async Task DeleteDesign(Design item)
+        {
+            await ConfirmService.Show($"Are you sure you want to delete {item.Name}?", "Yes",
+                async () => await ConfirmedDelete(item), "Cancel",
+                async () => await ConfirmService.Clear());
+        }
+
+        public async Task ConfirmedDelete(Design design)
+        {
+            try
+            {
+                await ConfirmService.Clear();
+                await SpinnerService.Show();
+                await DesignService.Delete(design.Id);
+                await SpinnerService.Hide();
+
+                //todo:close modal
+                ToastService.ShowError($"{design.Name} deleted!");
+                StateHasChanged();
+
+            }
+            catch (Exception ex)
+            {
+                await SpinnerService.Hide();
+                ToastService.ShowError(ex.Message);
+            }
+            finally
+            {
+                await SpinnerService.Hide();
+            }
+
+        }
+
 
     }
 }

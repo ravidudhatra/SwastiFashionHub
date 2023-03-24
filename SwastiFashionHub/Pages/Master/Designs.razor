@@ -2,6 +2,7 @@
 
 @layout MainLayout
 @inject IJSRuntime JsRuntime
+
 @using SwastiFashionHub.Shared.Core.Models;
 @using System.Linq
 @using System.Reflection;
@@ -21,13 +22,26 @@
 
                 @if (ItemsData != null)
                 {
-                    <Datatable T="DesignViewModel"
+                    <SwastiFashionHub.Components.Data.Table
+                           TItem=DesignViewModel
+                           Items=@ItemsData
+                           AllowEdit=true
+                           AllowDelete=true>
+                        <Columns>
+                            <SwastiFashionHub.Components.Data.TextColumn Heading="Name"
+                                        DataField=@nameof(@DesignViewModel.Name) />
+
+                            <SwastiFashionHub.Components.Data.TextColumn Heading="Note"
+                                        DataField=@nameof(@DesignViewModel.Note) />
+                        </Columns>
+                    </SwastiFashionHub.Components.Data.Table>
+                   @* <Datatable T="DesignViewModel"
                            Columns="@Columns"
                            Data="@ItemsData"
                            EnableFiltering=true
                            EnablePagination=true
                            EnableSorting=true>
-                    </Datatable>
+                    </Datatable>*@
                 }
             </div>
         </div>
@@ -87,8 +101,7 @@
                                                placeholder="Note"
                                                rows="3"
                                                name="Note"
-                                               Value="@DesignModel.Note"
-                                               ValueExpression="@( () => DesignModel.Note )">
+                                               @bind-Value="DesignModel.Note">
                                 </InputTextArea>
                             </div>
                         </div>

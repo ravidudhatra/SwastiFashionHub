@@ -1,0 +1,9 @@
+﻿<div class="form-field check-field">
+	<input type="checkbox"
+		   id=@Id
+		   name=Id
+		   checked=@Value
+		   @onclick:stopPropagation=true
+		   @oninput=@(e=> {Value=(bool)e.Value; ValueChanged.InvokeAsync(Value);})>
+	<label for=@Id>@Label</label><br>
+</div>

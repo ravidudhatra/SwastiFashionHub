@@ -10,9 +10,10 @@ namespace SwastiFashionHub.Core.Services.Interface
 {
     public interface IDesignService
     {
-        Task<Result<Design>> GetDesignAsync(int id);
-        Task<Result<List<Design>>> GetAllDesignAsync(string search = "");
-        Task<Result<int>> SaveDesignAsync(Design design);
-        Task<Result<int>> UpdateDesignAsync(Design design);
+        Task<Result<Design>> GetAsync(Guid id);
+        Task<Result<List<Design>>> GetAllAsync(string search = "");
+        Task<Result<Guid>> SaveAsync(Design design);
+        Task<Result<Guid>> UpdateAsync(Design design);
+        Task<Result<Guid>> DeleteAsync(Guid id);
     }
 }

@@ -7,14 +7,12 @@ namespace SwastiFashionHub.Data.Models;
 public partial class Design
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     public string? Note { get; set; }
-
-    public string? DesignImage { get; set; }
 
     public DateTime CreatedDate { get; set; }
 

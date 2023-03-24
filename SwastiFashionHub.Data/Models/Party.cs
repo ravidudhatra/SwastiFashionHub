@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SwastiFashionHub.Data.Models;
 
 public partial class Party
 {
-    public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
     public int PartyType { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
     public DateTime CreatedDate { get; set; }
 

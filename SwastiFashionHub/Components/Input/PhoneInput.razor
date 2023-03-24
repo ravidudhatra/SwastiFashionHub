@@ -1,0 +1,39 @@
+﻿@using SwastiFashionHub.Components.Display
+
+<div class="form-field">
+	<div class="label-wrap">
+		<label for=@Id class="label @(Required ? "required" : "")">@Label</label>
+	</div>
+	<div class="input-wrap">
+		<input id=@Id
+			   name=@Id
+			   type="text"
+			   class="form-control @(!isValid ?? false ? "invalid" : "")"
+			   style="width: 48px;"
+			   value=@value1
+			   maxlength=3
+			   @oninput=@(e=>Change(e.Value.ToString(), value2, value3))
+			   @onfocusout=@(()=>{if(isValid != null) Validate();}) />
+
+		<span style="font-weight: 700;">-</span>
+
+		<input type="text"
+			   class="form-control @(!isValid ?? false ? "invalid" : "")"
+			   style="width: 48px;"
+			   value=@value2
+			   maxlength=3
+			   @oninput=@(e=>Change(value1, e.Value.ToString(), value3))
+			   @onfocusout=@(()=>{if(isValid != null) Validate();}) />
+		
+		<span style="font-weight: 700;">-</span>
+
+		<input type="text"
+			   class="form-control @(!isValid ?? false ? "invalid" : "")"			  
+			   value=@value3
+			   maxlength=4
+			   @oninput=@(e=>Change(value1, value2,e.Value.ToString()))
+			   @onfocusout=@(()=>{if(isValid != null) Validate();}) />
+	</div>
+
+	<InputError Message=@errorMsg></InputError>
+</div>

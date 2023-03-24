@@ -1,0 +1,7 @@
+﻿<div class="field-error">
+	@if (!String.IsNullOrEmpty(Message))
+	{
+		<img alt="" src="images/error.png"  @onclick=@(()=> OnClick.InvokeAsync())/>
+	}
+	<span>@Message</span>	
+</div>

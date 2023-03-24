@@ -14,6 +14,18 @@ namespace SwastiFashionHub.Shared.Core.Services
             this.httpService = httpService;
         }
 
+        public async Task<Design> Get(Guid id)
+        {
+            var httpResponse = await httpService.Get<Design>($"{baseURL}/{id}");
+            if (!httpResponse.Success)
+            {
+                var errors = await httpResponse.GetErrors();
+                throw new AppException(errors);
+            }
+            var result = await httpResponse.GetResult();
+            return result.Data;
+        }
+
         public async Task<List<Design>> GetAll()
         {
             var httpResponse = await httpService.Get<List<Design>>($"{baseURL}");
@@ -26,9 +38,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<bool> Add(Design design)
+        public async Task<object> Add(Design design)
         {
-            var httpResponse = await httpService.Post<Design, bool>($"{baseURL}", design);
+            var httpResponse = await httpService.Post<Design, object>($"{baseURL}", design);
             var result = await httpResponse.GetResult();
             if (!httpResponse.Success || !result.IsSucceeded)
             {
@@ -38,9 +50,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<bool> Update(Design updatedesign)
+        public async Task<object> Update(Design updatedesign)
         {
-            var httpResponse = await httpService.Put<Design, bool>($"{baseURL}/{updatedesign.Id}", updatedesign);
+            var httpResponse = await httpService.Put<Design, object>($"{baseURL}/{updatedesign.Id}", updatedesign);
             var result = await httpResponse.GetResult();
             if (!httpResponse.Success || !result.IsSucceeded)
             {
@@ -48,6 +60,17 @@ namespace SwastiFashionHub.Shared.Core.Services
                 throw new AppException(errors);
             }
             return result.Data;
+        }
+
+        public async Task Delete(Guid id)
+        {
+            var httpResponse = await httpService.Delete($"{baseURL}/{id}");
+            var result = await httpResponse.GetResult();
+            if (!httpResponse.Success || !result.IsSucceeded)
+            {
+                var errors = await httpResponse.GetErrors();
+                throw new AppException(errors);
+            }
         }
     }
 }
