@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SwastiFashionHub.Shared.Core.Configuration;
-using SwastiFashionHub.Shared.Core.Models;
+using SwastiFashionHub.Shared.Core.Enum;
 using SwastiFashionHub.Shared.Core.Services.Interface;
 using System.Timers;
 

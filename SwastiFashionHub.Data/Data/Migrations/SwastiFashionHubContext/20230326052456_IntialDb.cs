@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class IntialDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "DesignImages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DesignId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DesignImages", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Designs",
                 columns: table => new
@@ -18,7 +31,6 @@ namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DesignImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
@@ -191,6 +203,9 @@ namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DesignImages");
+
             migrationBuilder.DropTable(
                 name: "Designs");
 

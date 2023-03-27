@@ -12,8 +12,8 @@ using SwastiFashionHub.Data.Context;
 namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
 {
     [DbContext(typeof(SwastiFashionHubLlpContext))]
-    [Migration("20230324033137_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20230326052456_IntialDb")]
+    partial class IntialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DesignImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
@@ -59,6 +56,24 @@ namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
                     b.HasKey("Id");
 
                     b.ToTable("Designs");
+                });
+
+            modelBuilder.Entity("SwastiFashionHub.Data.Models.DesignImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DesignId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DesignImages");
                 });
 
             modelBuilder.Entity("SwastiFashionHub.Data.Models.Fabric", b =>

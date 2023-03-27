@@ -14,10 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Response\" />
+    <Folder Include="Helper\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SwastiFashionHub.Common\SwastiFashionHub.Common.csproj" />
     <ProjectReference Include="..\SwastiFashionHub.Data\SwastiFashionHub.Data.csproj" />
   </ItemGroup>
 </Project>

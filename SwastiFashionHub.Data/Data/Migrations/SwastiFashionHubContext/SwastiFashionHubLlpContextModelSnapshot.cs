@@ -55,6 +55,24 @@ namespace SwastiFashionHub.Data.Data.Migrations.SwastiFashionHubContext
                     b.ToTable("Designs");
                 });
 
+            modelBuilder.Entity("SwastiFashionHub.Data.Models.DesignImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DesignId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DesignImages");
+                });
+
             modelBuilder.Entity("SwastiFashionHub.Data.Models.Fabric", b =>
                 {
                     b.Property<Guid>("Id")

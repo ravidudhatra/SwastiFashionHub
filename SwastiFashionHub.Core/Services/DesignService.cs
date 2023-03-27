@@ -1,38 +1,42 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SwastiFashionHub.Common.Data.Request;
+using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Core.Services.Interface;
 using SwastiFashionHub.Core.Wrapper;
 using SwastiFashionHub.Data.Context;
 using SwastiFashionHub.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SwastiFashionHub.Core.Services
 {
     public class DesignService : IDesignService
     {
         protected readonly SwastiFashionHubLlpContext _context;
-        public DesignService(SwastiFashionHubLlpContext dbContext)
+        private readonly IMapper _mapper;
+        public DesignService(SwastiFashionHubLlpContext dbContext,
+            IMapper mapper)
         {
             _context = dbContext;
+            _mapper = mapper;
         }
 
-        public async Task<Result<Guid>> SaveAsync(Design design)
+        public async Task<Result<Guid>> SaveAsync(DesignRequest design)
         {
             try
             {
                 if (_context.Designs == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                design.CreatedDate = DateTime.Now;
-                design.CreatedBy = 0; //todo: get logged in user id and set it.
+                var objModel = _mapper.Map<Design>(design);
+                //var objModel = new Design();
+                //objModel.Id = design.Id;
+                //objModel.Name = design.Name;
+                //objModel.Note = design.Note;
+                objModel.CreatedDate = DateTime.Now;
+                objModel.CreatedBy = 0; //todo: get logged in user id and set it.
 
-                _context.Designs.Add(design);
+                _context.Designs.Add(objModel);
 
                 await _context.SaveChangesAsync();
 
@@ -44,17 +48,24 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<Guid>> UpdateAsync(Design design)
+        public async Task<Result<Guid>> UpdateAsync(DesignRequest design)
         {
             try
             {
                 if (_context.Designs == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                design.UpdatedDate = DateTime.Now;
-                design.UpdatedBy = 0; //todo: get logged in user id and set it.
+                var objModel = await _context.Designs.FindAsync(design.Id);
 
-                _context.Entry(design).State = EntityState.Modified;
+                if (objModel == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                objModel.UpdatedDate = DateTime.Now;
+                objModel.UpdatedBy = 0; //todo: get logged in user id and set it.
+                objModel.Name = design.Name;
+                objModel.Note = design.Note;
+
+                _context.Entry(objModel).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return await Result<Guid>.SuccessAsync(design.Id, "Design updated successfully");
@@ -65,47 +76,49 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<Design>> GetAsync(Guid id)
+        public async Task<Result<DesignResponse>> GetAsync(Guid id)
         {
             try
             {
                 if (_context.Designs == null)
-                    return await Result<Design>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                    return await Result<DesignResponse>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                var data = await _context.Designs.FindAsync(id);
-                if (data == null)
-                    return await Result<Design>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                var query = await _context.Designs.FindAsync(id);
+                if (query == null)
+                    return await Result<DesignResponse>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                return await Result<Design>.SuccessAsync(data);
+                var data = _mapper.Map<DesignResponse>(query);
+                return await Result<DesignResponse>.SuccessAsync(data);
             }
             catch (Exception ex)
             {
-                return await Result<Design>.FailAsync("Failed");
+                return await Result<DesignResponse>.FailAsync("Failed");
             }
         }
 
-        public async Task<Result<List<Design>>> GetAllAsync(string search = "")
+        public async Task<Result<List<DesignResponse>>> GetAllAsync(string search = "")
         {
             try
             {
                 if (_context.Designs == null)
-                    return await Result<List<Design>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                    return await Result<List<DesignResponse>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
                 var queryable = _context.Designs.AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(search))
                     queryable = queryable.Where(x => x.Name.ToLower().Contains(search.ToLower())).Distinct();
 
-                var designQuery = await queryable.AsNoTracking().ToListAsync();
-                if (designQuery == null)
-                    return await Result<List<Design>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+                var query = await queryable.AsNoTracking().ToListAsync();
+                if (query == null)
+                    return await Result<List<DesignResponse>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                return await Result<List<Design>>.SuccessAsync(designQuery);
+                var data = _mapper.Map<List<DesignResponse>>(query);
+                return await Result<List<DesignResponse>>.SuccessAsync(data);
 
             }
             catch (Exception ex)
             {
-                return await Result<List<Design>>.FailAsync("Failed");
+                return await Result<List<DesignResponse>>.FailAsync("Failed");
             }
         }
 

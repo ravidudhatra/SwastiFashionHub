@@ -3,10 +3,12 @@
 @layout MainLayout
 @inject IJSRuntime JsRuntime
 
+@using SwastiFashionHub.Common.Data.Response;
 @using SwastiFashionHub.Shared.Core.Models;
 @using System.Linq
 @using System.Reflection;
 @using SwastiFashionHub.Shared.Core.Services.Interface;
+@using SwastiFashionHub.Components.Data;
 
 <Breadcrumb Title="Designs" BreadcrumbPageTitle="Master"></Breadcrumb>
 
@@ -22,31 +24,31 @@
 
                 @if (ItemsData != null)
                 {
-                    <SwastiFashionHub.Components.Data.Table
-                           TItem=DesignViewModel
+                    <DataTable TItem=DesignResponse
                            Items=@ItemsData
-                           AllowEdit=true
-                           AllowDelete=true>
+                           AllowEdit=false
+                           AllowDelete=false>
                         <Columns>
-                            <SwastiFashionHub.Components.Data.TextColumn Heading="Name"
-                                        DataField=@nameof(@DesignViewModel.Name) />
-
-                            <SwastiFashionHub.Components.Data.TextColumn Heading="Note"
-                                        DataField=@nameof(@DesignViewModel.Note) />
+                            <TextColumn Heading="Name"
+                                    DataField=@nameof(@DesignResponse.Name) />
+                            <TextColumn Heading="Note"
+                                    DataField=@nameof(@DesignResponse.Note) />
                         </Columns>
-                    </SwastiFashionHub.Components.Data.Table>
-                   @* <Datatable T="DesignViewModel"
-                           Columns="@Columns"
-                           Data="@ItemsData"
-                           EnableFiltering=true
-                           EnablePagination=true
-                           EnableSorting=true>
-                    </Datatable>*@
+                    </DataTable>
+
+                    @* <Datatable T="DesignResponse"
+                Columns="@Columns"
+                Data="@ItemsData"
+                EnableFiltering=true
+                EnablePagination=true
+                EnableSorting=true>
+                </Datatable>*@
                 }
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
 <!-- Add New Event MODAL -->
 <div class="modal fade @(ShowModel?"show d-block":"")" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -72,28 +74,6 @@
                                 <ValidationMessage For="@(() => DesignModel.Name)" />
                             </div>
                         </div>
-
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Design Image</label>
-                                <div class="file_uploading">
-                                    <div @ref="dropZoneElement" class="dropzone file-upload-wrapper">
-                                        <a class="d-block">Add file or drop files to upload</a>
-                                        <div @ref="inputFileContainer">
-                                            <InputFile OnChange="@OnInputFileChange"
-                                                       @onclick="OnInputFile" accept="image/*" />
-                                        </div>
-                                    </div>
-                                    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-                                    {
-                                        <div class="text-danger text-center">
-                                            @ErrorMessage
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">Note</label>
@@ -105,7 +85,20 @@
                                 </InputTextArea>
                             </div>
                         </div>
-
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Design Image</label>
+                                <div class="file_uploading">
+                                    <InputFile OnChange="@OnInputFileChange" @onclick="OnInputFile" accept="image/*" multiple />
+                                    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                                    {
+                                        <div class="text-danger text-center">
+                                            @ErrorMessage
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-12 text-end">
@@ -119,3 +112,7 @@
     </div> <!-- end modal dialog-->
 </div>
 <!-- end modal-->
+@if (ShowModel)
+{
+    <div class="modal-backdrop fade show"></div>
+}

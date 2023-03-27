@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Logging;
+using SwastiFashionHub.Common.Data.Request;
+using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Data.Models;
 using SwastiFashionHub.Shared.Core.Extensions;
-using SwastiFashionHub.Shared.Core.Helper;
-using SwastiFashionHub.Shared.Core.Models;
 using SwastiFashionHub.Shared.Core.Services;
 using SwastiFashionHub.Shared.Core.Services.Interface;
 
@@ -32,12 +31,12 @@ namespace SwastiFashionHub.Pages.Master
 
 
         public bool ShowModel { get; set; } = false;
-        public List<ColumnDefinition> Columns { get; set; }
-        private List<DesignViewModel> ItemsData;
-        private Design DesignModel = new();
+        
+        private List<DesignResponse> ItemsData;
+        private DesignRequest DesignModel = new();
 
-        public ElementReference dropZoneElement;
-        public ElementReference inputFileContainer;
+        //public ElementReference dropZoneElement;
+        //public ElementReference inputFileContainer;
 
         private async Task HandleSubmit()
         {
@@ -90,12 +89,9 @@ namespace SwastiFashionHub.Pages.Master
         private async Task BindDataAsync()
         {
             await SpinnerService.Show();
-
-            Columns = DataTableHelper.BindDataTableColumn<DesignViewModel>();
-
             var designData = await DesignService.GetAll();
 
-            ItemsData = designData.Select(x => new DesignViewModel
+            ItemsData = designData.Select(x => new DesignResponse
             {
                 CreatedDate = x.CreatedDate,
                 Id = x.Id,

@@ -2,6 +2,8 @@
 using SwastiFashionHub.Shared.Core.Services.Interface;
 using SwastiFashionHub.Shared.Core.Exceptions;
 using SwastiFashionHub.Data.Models;
+using SwastiFashionHub.Common.Data.Response;
+using SwastiFashionHub.Common.Data.Request;
 
 namespace SwastiFashionHub.Shared.Core.Services
 {
@@ -14,9 +16,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             this.httpService = httpService;
         }
 
-        public async Task<Design> Get(Guid id)
+        public async Task<DesignResponse> Get(Guid id)
         {
-            var httpResponse = await httpService.Get<Design>($"{baseURL}/{id}");
+            var httpResponse = await httpService.Get<DesignResponse>($"{baseURL}/{id}");
             if (!httpResponse.Success)
             {
                 var errors = await httpResponse.GetErrors();
@@ -26,9 +28,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<List<Design>> GetAll()
+        public async Task<List<DesignResponse>> GetAll()
         {
-            var httpResponse = await httpService.Get<List<Design>>($"{baseURL}");
+            var httpResponse = await httpService.Get<List<DesignResponse>>($"{baseURL}");
             if (!httpResponse.Success)
             {
                 var errors = await httpResponse.GetErrors();
@@ -38,9 +40,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<object> Add(Design design)
+        public async Task<object> Add(DesignRequest design)
         {
-            var httpResponse = await httpService.Post<Design, object>($"{baseURL}", design);
+            var httpResponse = await httpService.Post<DesignRequest, object>($"{baseURL}", design);
             var result = await httpResponse.GetResult();
             if (!httpResponse.Success || !result.IsSucceeded)
             {
@@ -50,9 +52,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<object> Update(Design updatedesign)
+        public async Task<object> Update(DesignRequest updatedesign)
         {
-            var httpResponse = await httpService.Put<Design, object>($"{baseURL}/{updatedesign.Id}", updatedesign);
+            var httpResponse = await httpService.Put<DesignRequest, object>($"{baseURL}/{updatedesign.Id}", updatedesign);
             var result = await httpResponse.GetResult();
             if (!httpResponse.Success || !result.IsSucceeded)
             {

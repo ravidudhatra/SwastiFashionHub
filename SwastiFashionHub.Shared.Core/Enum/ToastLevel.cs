@@ -1,4 +1,4 @@
-﻿namespace SwastiFashionHub.Shared.Core.Models;
+﻿namespace SwastiFashionHub.Shared.Core.Enum;
 
 public enum ToastLevel
 {

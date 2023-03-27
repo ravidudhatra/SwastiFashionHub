@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.OleDb;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SwastiFashionHub.Core.Services;
+using SwastiFashionHub.Common.Data.Request;
+using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Core.Services.Interface;
-using SwastiFashionHub.Core.Wrapper;
-using SwastiFashionHub.Data.Context;
-using SwastiFashionHub.Data.Models;
 
 namespace SwastiFashionHub.WebApi.Controllers
 {
@@ -19,6 +11,7 @@ namespace SwastiFashionHub.WebApi.Controllers
     public class DesignsController : ControllerBase
     {
         private readonly IDesignService _designService;
+        private static readonly string[] _validExtensions = { "jpg", "gif", "png", "jpeg" };
 
         public DesignsController(IDesignService designService)
         {
@@ -35,7 +28,7 @@ namespace SwastiFashionHub.WebApi.Controllers
 
         // GET: api/Designs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Design>> GetDesign(Guid id)
+        public async Task<ActionResult<DesignResponse>> GetDesign(Guid id)
         {
             var result = await _designService.GetAsync(id);
             return Ok(result);
@@ -44,7 +37,7 @@ namespace SwastiFashionHub.WebApi.Controllers
         // PUT: api/Designs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDesign(Guid id, Design design)
+        public async Task<IActionResult> PutDesign(Guid id, [FromBody] DesignRequest design)
         {
             var result = await _designService.UpdateAsync(design);
             return Ok(result);
@@ -53,7 +46,7 @@ namespace SwastiFashionHub.WebApi.Controllers
         // POST: api/Designs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<IActionResult> PostDesign(Design design)
+        public async Task<IActionResult> PostDesign([FromBody] DesignRequest design)
         {
             var result = await _designService.SaveAsync(design);
             return Ok(result);
@@ -65,6 +58,33 @@ namespace SwastiFashionHub.WebApi.Controllers
         {
             var result = await _designService.DeleteAsync(id);
             return Ok(result);
+        }
+
+        //      /// <summary>
+        ///// To upload design images
+        ///// </summary>
+        ///// <param name="file"></param>
+        ///// <returns></returns>
+        //[HttpPost("[action]"), DisableRequestSizeLimit]
+        //      public async Task<ActionResult> FileUploadAsync([FromForm] List<IFormFile> file)
+        //      {
+        //          foreach (var item in file)
+        //          {
+        //              if (IsImageExtension(item.FileName.Split(".")[1]))
+        //              {
+        //                  var result = await _blobService.UploadFileBlobAsync(item.FileName, file);
+        //                  return Ok(result);
+        //              }
+        //              else
+        //              {
+        //                  return BadRequest(Result.Fail("File should be an image."));
+        //              }
+        //          }
+        //      }
+
+        private static bool IsImageExtension(string ext)
+        {
+            return _validExtensions.Contains(ext.ToLower());
         }
     }
 }

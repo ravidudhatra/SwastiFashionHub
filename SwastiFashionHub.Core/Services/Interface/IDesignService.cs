@@ -1,4 +1,6 @@
-﻿using SwastiFashionHub.Core.Wrapper;
+﻿using SwastiFashionHub.Common.Data.Request;
+using SwastiFashionHub.Common.Data.Response;
+using SwastiFashionHub.Core.Wrapper;
 using SwastiFashionHub.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -10,10 +12,10 @@ namespace SwastiFashionHub.Core.Services.Interface
 {
     public interface IDesignService
     {
-        Task<Result<Design>> GetAsync(Guid id);
-        Task<Result<List<Design>>> GetAllAsync(string search = "");
-        Task<Result<Guid>> SaveAsync(Design design);
-        Task<Result<Guid>> UpdateAsync(Design design);
+        Task<Result<DesignResponse>> GetAsync(Guid id);
+        Task<Result<List<DesignResponse>>> GetAllAsync(string search = "");
+        Task<Result<Guid>> SaveAsync(DesignRequest design);
+        Task<Result<Guid>> UpdateAsync(DesignRequest design);
         Task<Result<Guid>> DeleteAsync(Guid id);
     }
 }

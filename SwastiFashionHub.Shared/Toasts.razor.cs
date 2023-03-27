@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using SwastiFashionHub.Shared.Core.Configuration;
-using SwastiFashionHub.Shared.Core.Models;
+using SwastiFashionHub.Shared.Core.Enum;
 using SwastiFashionHub.Shared.Core.Services.Interface;
 
 namespace SwastiFashionHub.Shared;

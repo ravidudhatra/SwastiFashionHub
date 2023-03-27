@@ -3,7 +3,7 @@ using SwastiFashionHub.Shared.Core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
-using SwastiFashionHub.Shared.Core.Models;
+using SwastiFashionHub.Shared.Core.Enum;
 
 namespace SwastiFashionHub.Shared;
 

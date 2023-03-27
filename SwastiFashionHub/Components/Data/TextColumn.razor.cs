@@ -8,7 +8,7 @@ namespace SwastiFashionHub.Components.Data
 		/// The Table component reference 
 		/// </summary>
 		[CascadingParameter]
-		protected Table<TItem> Context { get; set; }
+		protected DataTable<TItem> Context { get; set; }
 
 
 

@@ -1,6 +1,6 @@
 ﻿using SwastiFashionHub.Shared.Core.Configuration;
 using Microsoft.AspNetCore.Components;
-using SwastiFashionHub.Shared.Core.Models;
+using SwastiFashionHub.Shared.Core.Enum;
 
 namespace SwastiFashionHub.Shared.Core.Services.Interface;
 

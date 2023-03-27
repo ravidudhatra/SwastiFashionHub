@@ -1,13 +1,12 @@
 ﻿@using SwastiFashionHub.Components.Core;
-@*@using SwastiFashionHub.Components.Input*@
 @typeparam TItem
 @attribute [CascadingTypeParameter(nameof(TItem))]
 
 <CascadingValue Value=@this IsFixed=true>
-    <section class="sa-table">
+    <div class="table-responsive">
         <div class="container" style="@(!ShowBorder? "width:100%" : "")">
-            <div class="dashboard-table @(!ShowBorder ? "no-border" : "")" style=@Style>
-                <table>
+            <div class="@(!ShowBorder ? "no-border" : "")" style=@Style>
+                <table id="@TableId" class="table table-bordered dt-responsive nowrap">
                     <thead>
                         <tr>
                             @Columns
@@ -45,7 +44,6 @@
                                 @if (Items is not null & columns is not null)
                                 {
                                     int index = 0;
-
                                     foreach (var item in Items.Where(x => RowString(x).ToLower().Contains(filterCriteria.ToLower())).ToList())
                                     {
                                         int idx = index;
@@ -93,7 +91,6 @@
                                                 </td>
                                             }
                                         </tr>
-
                                         ++index;
                                     }
                                 }
@@ -101,16 +98,9 @@
                         }
                     </tbody>
                 </table>
-                <div class="ns-table-navigation">
-                    <a href="#"><img src="images/double-arrow-back.svg" alt="Double Arrow back"></a>
-                    <a href="#"><img src="images/arrow-back.svg" alt="Arrow back"></a>
-                    <a href="#" class="ns-page-no">@currentPageNumber</a>
-                    <a href="#"><img src="images/arrow-forward.svg" alt="Arrow forward"></a>
-                    <a href="#"><img src="images/double-arrow-forward.svg" alt="Double Arrow forward"></a>
-                </div>
             </div>
         </div>
-    </section>
+    </div>
 </CascadingValue>
 
 

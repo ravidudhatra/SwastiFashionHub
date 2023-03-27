@@ -22,7 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SwastiFashionHub.Common\SwastiFashionHub.Common.csproj" />
     <ProjectReference Include="..\SwastiFashionHub.Core\SwastiFashionHub.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

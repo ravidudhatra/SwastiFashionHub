@@ -8,16 +8,14 @@ namespace SwastiFashionHub.Data.Context;
 
 public partial class SwastiFashionHubLlpContext : DbContext
 {
-    public SwastiFashionHubLlpContext()
-    {
-    }
+    public SwastiFashionHubLlpContext() { }
 
     public SwastiFashionHubLlpContext(DbContextOptions<SwastiFashionHubLlpContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public virtual DbSet<Design> Designs { get; set; }
+
+    public virtual DbSet<DesignImage> DesignImages { get; set; }
 
     public virtual DbSet<Fabric> Fabrics { get; set; }
 
@@ -43,7 +41,7 @@ public partial class SwastiFashionHubLlpContext : DbContext
         public SwastiFashionHubLlpContext CreateDbContext(string[] args)
         {
             var optionBuilder = new DbContextOptionsBuilder<SwastiFashionHubLlpContext>();
-            optionBuilder.UseSqlServer("Data Source=LAPTOP-7C70UPGB;Initial Catalog=SwastiFashionHubDB;User ID=sa;Password=saadmin;TrustServerCertificate=True");
+            optionBuilder.UseSqlServer("Data Source=LAPTOP-7C70UPGB;Initial Catalog=SwastiFashionHubLLPDB;User ID=sa;Password=saadmin;TrustServerCertificate=True");
             return new SwastiFashionHubLlpContext(optionBuilder.Options);
         }
     }
