@@ -25,15 +25,12 @@ builder.Services.AddDbContext<SwastiFashionHubLlpContext>(options =>
             errorNumbersToAdd: null);
     }));
 
-
-
 var config = new MapperConfiguration(c => {
     c.AddProfile<DesignMapper>();
 });
 
 builder.Services.AddSingleton<IMapper>(s => config.CreateMapper());
 
-//builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

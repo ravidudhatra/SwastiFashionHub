@@ -6,6 +6,7 @@ using SwastiFashionHub.Core.Services.Interface;
 using SwastiFashionHub.Core.Wrapper;
 using SwastiFashionHub.Data.Context;
 using SwastiFashionHub.Data.Models;
+using System.ComponentModel.Design;
 using System.Net;
 
 namespace SwastiFashionHub.Core.Services
@@ -29,10 +30,6 @@ namespace SwastiFashionHub.Core.Services
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
                 var objModel = _mapper.Map<Design>(design);
-                //var objModel = new Design();
-                //objModel.Id = design.Id;
-                //objModel.Name = design.Name;
-                //objModel.Note = design.Note;
                 objModel.CreatedDate = DateTime.Now;
                 objModel.CreatedBy = 0; //todo: get logged in user id and set it.
 
@@ -103,7 +100,23 @@ namespace SwastiFashionHub.Core.Services
                 if (_context.Designs == null)
                     return await Result<List<DesignResponse>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                var queryable = _context.Designs.AsQueryable();
+                var queryable = (from design in _context.Designs.Where(x => x.IsArchived == false)
+                                 select new DesignResponse
+                                 {
+                                     Id = design.Id,
+                                     CreatedBy = design.CreatedBy,
+                                     CreatedDate = design.CreatedDate,
+                                     Name = design.Name,
+                                     Note = design.Note,
+                                     UpdatedBy = design.UpdatedBy,
+                                     DesignImages = (from designImages in _context.DesignImages.Where(x => x.DesignId == design.Id)
+                                                     select new DesignImageResponse
+                                                     {
+                                                         Id = designImages.Id,
+                                                         DesignId = design.Id,
+                                                         ImageUrl = designImages.ImageUrl
+                                                     }).ToList()
+                                 }).AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(search))
                     queryable = queryable.Where(x => x.Name.ToLower().Contains(search.ToLower())).Distinct();
@@ -112,8 +125,7 @@ namespace SwastiFashionHub.Core.Services
                 if (query == null)
                     return await Result<List<DesignResponse>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                var data = _mapper.Map<List<DesignResponse>>(query);
-                return await Result<List<DesignResponse>>.SuccessAsync(data);
+                return await Result<List<DesignResponse>>.SuccessAsync(query);
 
             }
             catch (Exception ex)
