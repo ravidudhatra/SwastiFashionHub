@@ -4,6 +4,8 @@ using SwastiFashionHub.Shared.Core.Exceptions;
 using SwastiFashionHub.Data.Models;
 using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Common.Data.Request;
+using Microsoft.AspNetCore.Http;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SwastiFashionHub.Shared.Core.Services
 {
@@ -42,14 +44,23 @@ namespace SwastiFashionHub.Shared.Core.Services
 
         public async Task<object> Add(DesignRequest design)
         {
-            var httpResponse = await httpService.Post<DesignRequest, object>($"{baseURL}", design);
-            var result = await httpResponse.GetResult();
-            if (!httpResponse.Success || !result.IsSucceeded)
+            try
             {
-                var errors = await httpResponse.GetErrors();
-                throw new AppException(errors);
+                var formData = ConvertToFormData(design);
+
+                var httpResponse = await httpService.Post($"{baseURL}", formData);
+                var result = await httpResponse.GetResult();
+                if (!httpResponse.Success || !result.IsSucceeded)
+                {
+                    var errors = await httpResponse.GetErrors();
+                    throw new AppException(errors);
+                }
+                return result.Data;
             }
-            return result.Data;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<object> Update(DesignRequest updatedesign)
@@ -74,5 +85,43 @@ namespace SwastiFashionHub.Shared.Core.Services
                 throw new AppException(errors);
             }
         }
+
+
+        public MultipartFormDataContent ConvertToFormData(object obj)
+        {
+            var formData = new MultipartFormDataContent();
+            var properties = obj.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(obj);
+                if (value != null)
+                {
+                    if (value is string || value is int || value is bool || value is decimal || value is double || value is Guid)
+                    {
+                        formData.Add(new StringContent(value.ToString()), property.Name);
+                    }
+                    else if (value is DateTime dateTimeValue)
+                    {
+                        formData.Add(new StringContent(dateTimeValue.ToString("o")), property.Name);
+                    }
+                    else if (value is IFormFile formFileValue)
+                    {
+                        var streamContent = new StreamContent(formFileValue.OpenReadStream());
+                        formData.Add(streamContent, property.Name, formFileValue.FileName);
+                    }
+                    else if (value is IEnumerable<IFormFile> formFilesValue)
+                    {
+                        foreach (var file in formFilesValue)
+                        {
+                            var streamContent = new StreamContent(file.OpenReadStream());
+                            formData.Add(streamContent, property.Name, file.FileName);
+                        }
+                    }
+                    // Add other types as needed
+                }
+            }
+            return formData;
+        }
+
     }
 }

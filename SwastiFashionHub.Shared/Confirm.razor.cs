@@ -16,6 +16,8 @@ namespace SwastiFashionHub.Shared
 
         private ConfirmServiceModel ConfirmServiceModel = null;
 
+        private bool ShowModel { get; set; } = false;
+
         protected override void OnInitialized()
         {
             this.ConfirmServiceModel = null;
@@ -44,9 +46,15 @@ namespace SwastiFashionHub.Shared
             // clear unsaved when an empty is received
             if (confirmServiceModel == null || (string.IsNullOrWhiteSpace(confirmServiceModel.Message) ||
                string.IsNullOrWhiteSpace(confirmServiceModel.SaveButtonName)))
+            {
                 this.ConfirmServiceModel = null;
+                ShowModel = false;
+            }
             else
+            {
                 this.ConfirmServiceModel = confirmServiceModel;
+                ShowModel = true;
+            }
             await InvokeAsync(() => { StateHasChanged(); });
         }
 
@@ -59,6 +67,12 @@ namespace SwastiFashionHub.Shared
         {
             this.ConfirmServiceModel = null;
             await ConfirmService.Clear();
+        }
+
+        private void CloseModelClick()
+        {
+            ShowModel = false;
+            StateHasChanged();
         }
     }
 }

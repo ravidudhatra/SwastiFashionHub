@@ -66,26 +66,25 @@
                                                     {
                                                         @if (!String.IsNullOrEmpty(column.DataField))
                                                         {
-                                                            @(
-                                                            Helper.GetPropertyValue<string>(item, column.DataField)
-                                                                )
+                                                            @(Helper.GetPropertyValue<string>(item, column.DataField))
                                                         }
                                                     }
                                                 </td>
                                             }
                                             @if (AllowEdit || AllowDelete)
                                             {
-                                                <td class="edit-icons">
+                                                <td class="action-icons">
                                                     @if (AllowEdit)
                                                     {
-                                                        <a href="javascript:void(0)">
-                                                            <img src="images/edit.svg" alt="Edit Icon" width="18" @onclick=@(()=> Edit(item))>
+                                                        <a href="javascript:void(0);" @onclick=@(()=> OnEditClick(item)) class="px-1  text-primary">
+                                                            <i class="uil uil-pen font-size-18"></i>
                                                         </a>
+
                                                     }
                                                     @if (AllowDelete)
                                                     {
-                                                        <a href="javascript:void(0)">
-                                                            <img src="images/trash.svg" alt="Edit Icon" width="18" @onclick=@(()=> Delete(item))>
+                                                        <a href="javascript:void(0);" @onclick=@(()=> OnDeleteClick(item)) class="px-1 text-danger">
+                                                            <i class="uil uil-trash-alt font-size-18"></i>
                                                         </a>
                                                     }
                                                 </td>

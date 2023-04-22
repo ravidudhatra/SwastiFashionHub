@@ -8,7 +8,6 @@ namespace SwastiFashionHub.Shared.Core.Models
 {
     public class ConfirmServiceModel
     {
-        //public string Id { get; set; }
         public string Message { get; set; }
         public string DiscardButtonName { get; set; }
         public string SaveButtonName { get; set; }

@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+//using Microsoft.AspNetCore.Components.Forms;
 using SwastiFashionHub.Common.Data.Request;
 using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Data.Models;
 using SwastiFashionHub.Shared.Core.Extensions;
 using SwastiFashionHub.Shared.Core.Services;
 using SwastiFashionHub.Shared.Core.Services.Interface;
+using System.IO;
+using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 
 namespace SwastiFashionHub.Pages.Master
@@ -29,16 +33,53 @@ namespace SwastiFashionHub.Pages.Master
         public int MaxFileSize = 512000;
         public int MaxAllowedFiles = 1;
 
-
+        private List<string> SelectedImageIds { get; set; }
+        private List<IFormFile> NewImages { get; set; }
         public bool ShowModel { get; set; } = false;
-        
+
         private List<DesignResponse> ItemsData;
         private DesignRequest DesignModel = new();
 
-        //public ElementReference dropZoneElement;
-        //public ElementReference inputFileContainer;
+        private async Task HandleFileSelectionAsync(InputFileChangeEventArgs e)
+        {
+            ToastService.ClearAll();
+            NewImages = new List<IFormFile>();
+            try
+            {
+                foreach (var imageFile in e.GetMultipleFiles())
+                {
+                    //using var memoryStream = new MemoryStream();
+                    //await imageFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 1024).CopyToAsync(memoryStream);
 
-        private async Task HandleSubmit()
+                    //NewImages.Add(new FormFile(memoryStream, 0, memoryStream.Length, imageFile.Name, imageFile.Name));
+
+                    byte[] fileBytes;
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imageFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 1024).CopyToAsync(memoryStream);
+                        fileBytes = memoryStream.ToArray();
+                    }
+
+                    var contentDisposition = "form-data; name=\"" + imageFile.Name + "\"; filename=\"" + imageFile.Name + "\"";
+
+                    NewImages.Add(new FormFile(new MemoryStream(fileBytes), 0, fileBytes.Length, imageFile.Name, imageFile.Name)
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentDisposition = contentDisposition,
+                        ContentType = imageFile.ContentType
+                    });
+                }
+
+                DesignModel.NewImages = NewImages;
+            }
+            catch (Exception ex)
+            {
+                ToastService.ShowError(ex.Message);
+            }
+
+        }
+
+        private async Task HandleValidSubmit()
         {
             try
             {
@@ -53,14 +94,17 @@ namespace SwastiFashionHub.Pages.Master
                     DesignModel.Id = Guid.NewGuid();
                     await DesignService.Add(DesignModel);
                     ToastService.ShowSuccess("Design save successfully.");
+                    await BindDataAsync();
                 }
-
-                await BindDataAsync();
-                ShowModel = false;
             }
             catch (Exception ex)
             {
                 ToastService.ShowError(ex.Message);
+            }
+            finally
+            {
+                DesignModel = new DesignRequest();
+                ShowModel = false;
             }
 
         }
@@ -112,44 +156,6 @@ namespace SwastiFashionHub.Pages.Master
             ErrorMessage = string.Empty;
         }
 
-        private async Task OnInputFileChange(InputFileChangeEventArgs e)
-        {
-            ErrorMessage = string.Empty;
-
-            await SpinnerService.Show();
-
-            try
-            {
-                var file = e.GetMultipleFiles(MaxAllowedFiles)?.FirstOrDefault();
-                if (file != null)
-                {
-                    if (!FileUploadExtension.ImageExt.Contains(file.Name.GetFileExtensionFromUrl()))
-                    {
-                        ErrorMessage = "File should be an image.";
-                        ToastService.ShowInfo(ErrorMessage);
-                        return;
-                    }
-                    if (file.Size <= MaxFileSize)
-                    {
-                        //DesignModel.DesignImages = Convert.ToBase64String(ReadFully(file.OpenReadStream(file.Size)));
-                    }
-                    else
-                    {
-                        ErrorMessage = "Invalid file size. Max file size is 512kb";
-                        ToastService.ShowInfo(ErrorMessage);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ToastService.ShowError(ex.Message);
-            }
-            finally
-            {
-                await SpinnerService.Hide();
-            }
-        }
-
         public static byte[] ReadFully(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];
@@ -164,15 +170,19 @@ namespace SwastiFashionHub.Pages.Master
             }
         }
 
+        private async Task OnEditItemClick(DesignResponse item)
+        {
 
-        private async Task DeleteDesign(Design item)
+        }
+
+        private async Task OnDeleteItemClick(DesignResponse item)
         {
             await ConfirmService.Show($"Are you sure you want to delete {item.Name}?", "Yes",
                 async () => await ConfirmedDelete(item), "Cancel",
                 async () => await ConfirmService.Clear());
         }
 
-        public async Task ConfirmedDelete(Design design)
+        public async Task ConfirmedDelete(DesignResponse design)
         {
             try
             {
@@ -182,9 +192,9 @@ namespace SwastiFashionHub.Pages.Master
                 await SpinnerService.Hide();
 
                 //todo:close modal
-                ToastService.ShowError($"{design.Name} deleted!");
+                ToastService.ShowSuccess($"{design.Name} deleted!");
+                await BindDataAsync();
                 StateHasChanged();
-
             }
             catch (Exception ex)
             {
@@ -198,6 +208,31 @@ namespace SwastiFashionHub.Pages.Master
 
         }
 
+
+        private string GetImageLink(string imageId)
+        {
+            return $"/api/designs/{DesignModel.Id}/images/{imageId}";
+        }
+
+        private async Task ConfirmedImageDelete(string imageId)
+        {
+            SelectedImageIds.Remove(imageId);
+            DesignModel.ImageIds.Remove(imageId);
+
+            //var response = await HttpClient.DeleteAsync($"/api/designs/{DesignModel.Id}/images/{imageId}");
+
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    ErrorMessage = await response.Content.ReadAsStringAsync();
+            //}
+        }
+
+        private async Task RemoveImage(string imageId)
+        {
+            await ConfirmService.Show($"Are you sure you want to remove this image?", "Yes",
+               async () => await ConfirmedImageDelete(imageId), "Cancel",
+               async () => await ConfirmService.Clear());
+        }
 
     }
 }

@@ -11,6 +11,7 @@ namespace SwastiFashionHub.Core.Mappings
         {
             CreateMap<Design, DesignRequest>().ReverseMap();
             CreateMap<Design, DesignResponse>().ReverseMap();
+            CreateMap<DesignImage, DesignImagesRequest>().ReverseMap();
         }
     }
 }

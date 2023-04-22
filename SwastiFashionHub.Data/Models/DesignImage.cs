@@ -10,4 +10,7 @@ public partial class DesignImage
     public Guid Id { get; set; }
     public Guid DesignId { get; set; }
     public string ImageUrl { get; set; }
+    public string Name { get; set; }
+    public string FileType { get; set; }
+    public string Extension { get; set; }
 }

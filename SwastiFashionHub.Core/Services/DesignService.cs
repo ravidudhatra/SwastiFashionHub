@@ -6,6 +6,7 @@ using SwastiFashionHub.Core.Services.Interface;
 using SwastiFashionHub.Core.Wrapper;
 using SwastiFashionHub.Data.Context;
 using SwastiFashionHub.Data.Models;
+using System;
 using System.ComponentModel.Design;
 using System.Net;
 
@@ -134,7 +135,7 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<Guid>> DeleteAsync(Guid id)
+        public async Task<Result<Guid>> DeleteAsync(Guid id, string imagePath)
         {
             try
             {
@@ -145,7 +146,16 @@ namespace SwastiFashionHub.Core.Services
                 if (data == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
+                var designImagesData = await _context.DesignImages.Where(x => x.DesignId == id).ToListAsync();
+
+                _context.DesignImages.RemoveRange(designImagesData);
                 _context.Designs.Remove(data);
+
+                //remove images from server
+                bool basePathExists = Directory.Exists(imagePath);
+                if (basePathExists)
+                    Directory.Delete(imagePath, true);
+
                 await _context.SaveChangesAsync();
 
                 return await Result<Guid>.SuccessAsync(id, "Design deleted successfully");
@@ -155,5 +165,29 @@ namespace SwastiFashionHub.Core.Services
                 return await Result<Guid>.FailAsync("Failed");
             }
         }
+
+
+
+        public async Task<Result<Guid>> SaveDesignImageAsync(DesignImagesRequest designImage)
+        {
+            try
+            {
+                if (_context.Designs == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                var objModel = _mapper.Map<DesignImage>(designImage);
+
+                _context.DesignImages.Add(objModel);
+
+                await _context.SaveChangesAsync();
+
+                return await Result<Guid>.SuccessAsync(designImage.Id, "Design image saved successfully");
+            }
+            catch (Exception ex)
+            {
+                return await Result<Guid>.FailAsync("Failed");
+            }
+        }
+
     }
 }

@@ -26,8 +26,10 @@
                 {
                     <DataTable TItem=DesignResponse
                            Items=@ItemsData
-                           AllowEdit=false
-                           AllowDelete=false>
+                           AllowEdit=true
+                           AllowDelete=true
+                           OnEdit="OnEditItemClick"
+                           OnDelete="OnDeleteItemClick">
                         <Columns>
                             <TextColumn Heading="Name"
                                     DataField=@nameof(@DesignResponse.Name) />
@@ -35,14 +37,6 @@
                                     DataField=@nameof(@DesignResponse.Note) />
                         </Columns>
                     </DataTable>
-
-                    @* <Datatable T="DesignResponse"
-                Columns="@Columns"
-                Data="@ItemsData"
-                EnableFiltering=true
-                EnablePagination=true
-                EnableSorting=true>
-                </Datatable>*@
                 }
             </div>
         </div>
@@ -58,7 +52,7 @@
                 <button type="button" class="btn-close" @onclick="CloseModelClick" aria-hidden="true"></button>
             </div>
             <div class="modal-body p-4">
-                <EditForm Model="@DesignModel" OnSubmit="@HandleSubmit" class="needs-validation">
+                <EditForm Model="@DesignModel" OnValidSubmit="@HandleValidSubmit" class="needs-validation">
                     <DataAnnotationsValidator />
                     <div class="row">
                         <div class="col-12">
@@ -89,11 +83,25 @@
                             <div class="mb-3">
                                 <label class="form-label">Design Image</label>
                                 <div class="file_uploading">
-                                    <InputFile OnChange="@OnInputFileChange" @onclick="OnInputFile" accept="image/*" multiple />
+                                    <InputFile OnChange="@HandleFileSelectionAsync" @onclick="OnInputFile" accept="image/*" multiple />
                                     @if (!string.IsNullOrWhiteSpace(ErrorMessage))
                                     {
                                         <div class="text-danger text-center">
                                             @ErrorMessage
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Existing Images</label>
+                                <div id="existing-images">
+                                    @foreach (var imageId in DesignModel.ImageIds)
+                                    {
+                                        <div>
+                                            <a href="@GetImageLink(imageId)" target="_blank">Image @imageId</a>
+                                            <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveImage(imageId))">Remove</button>
                                         </div>
                                     }
                                 </div>

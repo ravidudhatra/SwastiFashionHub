@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,10 +17,11 @@ namespace SwastiFashionHub.Common.Data.Request
 
         public string? Note { get; set; }
 
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
-        public int UpdatedBy { get; set; }
-        
-        public List<DesignImagesRequest>? DesignImages { get; set; }
+        public int? UpdatedBy { get; set; }
+
+        public List<string> ImageIds { get; set; } = new List<string>();
+        public List<IFormFile>? NewImages { get; set; }
     }
 }

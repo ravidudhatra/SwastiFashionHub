@@ -79,7 +79,6 @@ namespace SwastiFashionHub.Components.Data
         [Parameter]
         public string Style { get; set; }
 
-
         /// <summary>
         /// Injeting js runtime
         /// </summary>
@@ -98,8 +97,6 @@ namespace SwastiFashionHub.Components.Data
             }
         }
 
-
-
         /// <summary>
         /// Called from TableColumn component to register itself in table
         /// </summary>
@@ -112,7 +109,6 @@ namespace SwastiFashionHub.Components.Data
         }
 
 
-
         /// <summary>
         /// Called from TableColumn component to unregister itself form table
         /// </summary>
@@ -123,34 +119,23 @@ namespace SwastiFashionHub.Components.Data
             StateHasChanged();
         }
 
-
-
         /// <summary>
         /// Called when user clicks on edit
         /// </summary>
         /// <param name="item">the item to be edited</param>
-        private void Edit(TItem item)
+        private void OnEditClick(TItem item)
         {
             OnEdit.InvokeAsync(item);
         }
-
-
 
         /// <summary>
         /// Called when user clicks on edit
         /// </summary>
         /// <param name="item">The item to be deleted</param>
-        private async Task Delete(TItem item)
+        private async Task OnDeleteClick(TItem item)
         {
-            bool confirm = await JsRuntime.InvokeAsync<bool>("confirm", "Do you really want to delete?");
-
-            if (confirm)
-            {
-                await OnDelete.InvokeAsync(item);
-            }
+            await OnDelete.InvokeAsync(item);
         }
-
-
 
         /// <summary>
         /// Returns concatenated string of all colummns in given row
@@ -172,7 +157,6 @@ namespace SwastiFashionHub.Components.Data
         }
 
 
-
         /// <summary>
         /// Selects item in UI
         /// </summary>
@@ -191,8 +175,6 @@ namespace SwastiFashionHub.Components.Data
             selectedIndex = idx;
         }
 
-
-
         /// <summary>
         /// Applies filter in table
         /// </summary>
@@ -203,14 +185,11 @@ namespace SwastiFashionHub.Components.Data
             return Items?.Count(x => RowString(x).ToLower().Contains(filterCriteria.ToLower())) ?? 0;
         }
 
-
-
         /// <summary>
         /// Return currently selected item
         /// </summary>
         /// <returns></returns>
         public TItem SelectedItem() => Items[selectedIndex];
-
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

@@ -1,17 +1,51 @@
-﻿@if (ConfirmServiceModel != null && !string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName))
+﻿
+<!-- Add New Event MODAL -->
+<div class="modal fade @(ShowModel?"show d-block":"")" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header py-3 px-4 border-bottom-0">
+                <h5 class="modal-title" id="modal-title">Confirmation Dialog</h5>
+                <button type="button" class="btn-close" @onclick="CloseModelClick" aria-hidden="true"></button>
+            </div>
+            @if (ConfirmServiceModel != null && !string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName))
+            {
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <div class="col-12">
+                            @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.Message))
+                            {
+                                <label class="confirmchanges-message">
+                                    @ConfirmServiceModel.Message
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.DiscardButtonName) && ConfirmServiceModel.DiscardButton != null)
+                    {
+                        <button @onclick="@ConfirmServiceModel.DiscardButton"
+                                type="button"
+                                class="ml-3 btn btn-warning d-inline text-light">
+                            @ConfirmServiceModel.DiscardButtonName
+                        </button>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName) && ConfirmServiceModel.SaveButton != null)
+                    {
+                        <button @onclick="@ConfirmServiceModel.SaveButton"
+                                type="button"
+                                class="ml-3 btn btn-success d-inline">
+                            @ConfirmServiceModel.SaveButtonName
+                        </button>
+                    }
+                </div>
+            }
+        </div> <!-- end modal-content-->
+    </div> <!-- end modal dialog-->
+</div>
+<!-- end modal-->
+@if (ShowModel)
 {
-    <div class="confirmchanges-frame">
-        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.Message))
-        {
-            <label class="confirmchanges-message">@ConfirmServiceModel.Message</label>
-        }
-        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.DiscardButtonName) && ConfirmServiceModel.DiscardButton != null)
-        {
-            <button type="button" class="ml-3 btn btn-outline-light d-inline text-light" @onclick="@ConfirmServiceModel.DiscardButton">@ConfirmServiceModel.DiscardButtonName</button>
-        }
-        @if (!string.IsNullOrWhiteSpace(ConfirmServiceModel.SaveButtonName) && ConfirmServiceModel.SaveButton != null)
-        {
-            <button type="button" class="ml-3 btn btn-success d-inline" @onclick="@ConfirmServiceModel.SaveButton">@ConfirmServiceModel.SaveButtonName</button>
-        }
-    </div>
+    <div class="modal-backdrop fade show"></div>
 }
+
