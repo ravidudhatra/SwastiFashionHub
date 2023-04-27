@@ -86,7 +86,27 @@ namespace SwastiFashionHub.Shared.Core.Services
             }
         }
 
-
+        public async Task<string> GetImage(Guid designId, Guid imageId)
+        {
+            var httpResponse = await httpService.Get<string>($"{baseURL}/{designId}/images/{imageId}/");
+            var result = await httpResponse.GetResult();
+            if (!httpResponse.Success || !result.IsSucceeded)
+            {
+                var errors = await httpResponse.GetErrors();
+                throw new AppException(errors);
+            }
+            return result.Data;
+        }
+        public async Task DeleteDesignImage(Guid imageId)
+        {
+            var httpResponse = await httpService.Delete($"{baseURL}/{imageId}/images");
+            var result = await httpResponse.GetResult();
+            if (!httpResponse.Success || !result.IsSucceeded)
+            {
+                var errors = await httpResponse.GetErrors();
+                throw new AppException(errors);
+            }
+        }
         public MultipartFormDataContent ConvertToFormData(object obj)
         {
             var formData = new MultipartFormDataContent();

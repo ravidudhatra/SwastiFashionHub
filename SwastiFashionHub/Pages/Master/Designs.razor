@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-body">
 
-                <button class="btn font-16 btn-primary btn-block btn-sm mb-2" id="btn-new-event" @onclick="ShowModelClick">
+                <button class="btn font-16 btn-primary btn-block btn-sm mb-2" id="btn-new-event" @onclick="OnShowModelClick">
                     <i class="mdi mdi-plus-circle-outline"></i>
                     Create New Design
                 </button>
@@ -42,7 +42,6 @@
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
-
 <!-- Add New Event MODAL -->
 <div class="modal fade @(ShowModel?"show d-block":"")" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -93,20 +92,35 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Existing Images</label>
-                                <div id="existing-images">
-                                    @foreach (var imageId in DesignModel.ImageIds)
-                                    {
-                                        <div>
-                                            <a href="@GetImageLink(imageId)" target="_blank">Image @imageId</a>
-                                            <button type="button" class="btn btn-danger btn-sm" @onclick="@(() => RemoveImage(imageId))">Remove</button>
+
+
+                        @if (Guid.Empty != DesignModel.Id && (DesignModel.Images != null && DesignModel.Images.Count > 0))
+                        {
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Existing Images</label>
+                                    <div id="existing-images">
+                                        <div class="row">
+
+                                            @foreach (var item in DesignModel.Images)
+                                            {
+                                                <div class="col-6 mb-2">
+                                                    <a href="javascript:void(0)" target="_blank">
+                                                        <img width="100" height="90" src="@GetImageLink(item)" />
+                                                    </a>
+
+                                                    <a href="javascript:void(0);" @onclick="@(() => RemoveImage(item.Id))"
+                                                       class="px-1 text-danger">
+                                                        <i class="uil uil-trash-alt font-size-18"></i>
+                                                    </a>
+                                                </div>
+                                            }
+
                                         </div>
-                                    }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                     <div class="row mt-2">
                         <div class="col-12 text-end">

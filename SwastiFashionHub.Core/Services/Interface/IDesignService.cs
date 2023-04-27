@@ -18,6 +18,8 @@ namespace SwastiFashionHub.Core.Services.Interface
         Task<Result<Guid>> UpdateAsync(DesignRequest design);
         Task<Result<Guid>> DeleteAsync(Guid id, string imagePath);
 
+
         Task<Result<Guid>> SaveDesignImageAsync(DesignImagesRequest designImages);
+        Task<Result<Guid>> DeleteDesignImageAsync(Guid id, string webRootPath);
     }
 }

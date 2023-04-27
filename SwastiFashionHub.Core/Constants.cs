@@ -8,6 +8,6 @@ namespace SwastiFashionHub.Core
 {
     public static class Constants
     {
-        public static string ImageStoreBasePath = $"\\wwwroot\\ImagesData\\Design";
+        public static string ImageStoreBasePath = $"\\ImagesData\\Design";
     }
 }

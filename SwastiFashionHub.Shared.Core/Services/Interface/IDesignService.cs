@@ -16,5 +16,7 @@ namespace SwastiFashionHub.Shared.Core.Services.Interface
         Task<object> Add(DesignRequest design);
         Task<object> Update(DesignRequest updatedesign);
         Task Delete(Guid id);
+        Task<string> GetImage(Guid designId, Guid imageId);
+        Task DeleteDesignImage(Guid imageId);
     }
 }

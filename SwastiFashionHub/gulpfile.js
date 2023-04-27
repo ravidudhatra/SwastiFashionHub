@@ -33,10 +33,15 @@ gulp.task('copy:libs', function () {
       .pipe(gulp.dest(paths.src.libs.dir));
 });
 
-gulp.task('clean:skote', function (callback) {
+gulp.task('copy-bootstrap-scss', function() {
+  return gulp.src(paths.base.node.dir +'/bootstrap/scss/**/*')
+    .pipe(gulp.dest(paths.src.libs.dir+'/bootstrap/scss'));
+});
+
+gulp.task('clean:rd', function (callback) {
   del.sync(paths.src.libs.dir);
   callback();
 });
 
-gulp.task('build', gulp.series(gulp.parallel('clean:skote', 'copy:libs')));
-gulp.task('default', gulp.series(gulp.parallel('clean:skote', 'copy:libs')));
+gulp.task('build', gulp.series(gulp.parallel('clean:rd', 'copy:libs','copy-bootstrap-scss')));
+gulp.task('default', gulp.series(gulp.parallel('clean:rd', 'copy:libs','copy-bootstrap-scss')));

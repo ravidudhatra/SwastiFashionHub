@@ -152,9 +152,10 @@ namespace SwastiFashionHub.Core.Services
                 _context.Designs.Remove(data);
 
                 //remove images from server
-                bool basePathExists = Directory.Exists(imagePath);
+                string directoryPath = string.Format("{0}/{1}", imagePath, id.ToString());
+                bool basePathExists = Directory.Exists(directoryPath);
                 if (basePathExists)
-                    Directory.Delete(imagePath, true);
+                    Directory.Delete(directoryPath, true);
 
                 await _context.SaveChangesAsync();
 
@@ -182,6 +183,35 @@ namespace SwastiFashionHub.Core.Services
                 await _context.SaveChangesAsync();
 
                 return await Result<Guid>.SuccessAsync(designImage.Id, "Design image saved successfully");
+            }
+            catch (Exception ex)
+            {
+                return await Result<Guid>.FailAsync("Failed");
+            }
+        }
+
+        public async Task<Result<Guid>> DeleteDesignImageAsync(Guid id, string webRootPath)
+        {
+            try
+            {
+                if (_context.DesignImages == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                var data = await _context.DesignImages.FindAsync(id);
+                if (data == null)
+                    return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
+
+                _context.DesignImages.Remove(data);
+
+                await _context.SaveChangesAsync();
+
+                //remove images from server
+                string filePath = string.Format("{0}/{1}", webRootPath, data.ImageUrl);
+                bool basePathExists = File.Exists(filePath);
+                if (basePathExists)
+                    File.Delete(filePath);
+
+                return await Result<Guid>.SuccessAsync(id, "Design deleted successfully");
             }
             catch (Exception ex)
             {

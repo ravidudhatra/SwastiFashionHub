@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-//using Microsoft.AspNetCore.Components.Forms;
 using SwastiFashionHub.Common.Data.Request;
 using SwastiFashionHub.Common.Data.Response;
-using SwastiFashionHub.Data.Models;
-using SwastiFashionHub.Shared.Core.Extensions;
+using SwastiFashionHub.Shared.Core.Common;
 using SwastiFashionHub.Shared.Core.Services;
 using SwastiFashionHub.Shared.Core.Services.Interface;
-using System.IO;
-using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 
 namespace SwastiFashionHub.Pages.Master
@@ -28,17 +23,22 @@ namespace SwastiFashionHub.Pages.Master
         [Inject]
         public IConfirmService ConfirmService { get; set; }
 
-        public string ErrorMessage { get; set; }
+        [Inject]
+        private IConfiguration? Configuration { get; set; }
 
-        public int MaxFileSize = 512000;
-        public int MaxAllowedFiles = 1;
-
-        private List<string> SelectedImageIds { get; set; }
-        private List<IFormFile> NewImages { get; set; }
+        public string? ErrorMessage { get; set; }
+        private List<IFormFile>? NewImages { get; set; }
         public bool ShowModel { get; set; } = false;
 
-        private List<DesignResponse> ItemsData;
-        private DesignRequest DesignModel = new();
+        private string _baseUrl = string.Empty;
+
+        private List<DesignResponse>? ItemsData;
+        private DesignRequest? DesignModel = new();
+
+        protected override void OnInitialized()
+        {
+            _baseUrl = Configuration.GetValue<string>("BaseUrl");
+        }
 
         private async Task HandleFileSelectionAsync(InputFileChangeEventArgs e)
         {
@@ -48,15 +48,11 @@ namespace SwastiFashionHub.Pages.Master
             {
                 foreach (var imageFile in e.GetMultipleFiles())
                 {
-                    //using var memoryStream = new MemoryStream();
-                    //await imageFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 1024).CopyToAsync(memoryStream);
-
-                    //NewImages.Add(new FormFile(memoryStream, 0, memoryStream.Length, imageFile.Name, imageFile.Name));
-
                     byte[] fileBytes;
                     using (var memoryStream = new MemoryStream())
                     {
-                        await imageFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 1024).CopyToAsync(memoryStream);
+                        await imageFile.OpenReadStream(Constants.MaxAllowedSizeForImageUpload).CopyToAsync(memoryStream);
+
                         fileBytes = memoryStream.ToArray();
                     }
 
@@ -76,7 +72,6 @@ namespace SwastiFashionHub.Pages.Master
             {
                 ToastService.ShowError(ex.Message);
             }
-
         }
 
         private async Task HandleValidSubmit()
@@ -106,11 +101,11 @@ namespace SwastiFashionHub.Pages.Master
                 DesignModel = new DesignRequest();
                 ShowModel = false;
             }
-
         }
 
-        private void ShowModelClick()
+        private void OnShowModelClick()
         {
+            DesignModel = new DesignRequest();
             ShowModel = true;
             StateHasChanged();
         }
@@ -140,7 +135,8 @@ namespace SwastiFashionHub.Pages.Master
                 CreatedDate = x.CreatedDate,
                 Id = x.Id,
                 Name = x.Name,
-                Note = x.Note
+                Note = x.Note,
+                DesignImages = x.DesignImages,
             }).ToList();
 
             await SpinnerService.Hide();
@@ -172,7 +168,32 @@ namespace SwastiFashionHub.Pages.Master
 
         private async Task OnEditItemClick(DesignResponse item)
         {
+            if (ItemsData == null)
+                ToastService.ShowError("Item data missing.");
+            else
+            {
+                DesignModel = ItemsData?
+                    .Select(x => new DesignRequest
+                    {
+                        Id = item.Id,
+                        CreatedBy = item.CreatedBy,
+                        Name = item.Name,
+                        Images = item.DesignImages?.Select(y => new DesignImagesRequest
+                        {
+                            Id = y.Id,
+                            DesignId = y.DesignId,
+                            Extension = y.Extension,
+                            FileType = y.FileType,
+                            ImageUrl = y.ImageUrl,
+                            Name = y.Name
+                        }).ToList(),
+                        Note = item.Note,
+                    }).FirstOrDefault(x => x.Id == item.Id);
 
+                ShowModel = true;
+            }
+
+            await Task.CompletedTask;
         }
 
         private async Task OnDeleteItemClick(DesignResponse item)
@@ -205,29 +226,46 @@ namespace SwastiFashionHub.Pages.Master
             {
                 await SpinnerService.Hide();
             }
-
         }
 
-
-        private string GetImageLink(string imageId)
+        private string GetImageLink(DesignImagesRequest item)
         {
-            return $"/api/designs/{DesignModel.Id}/images/{imageId}";
+            return string.Format("{0}/{1}", _baseUrl, item.ImageUrl);
+
         }
 
-        private async Task ConfirmedImageDelete(string imageId)
+        private async Task ConfirmedImageDelete(Guid imageId)
         {
-            SelectedImageIds.Remove(imageId);
-            DesignModel.ImageIds.Remove(imageId);
+            try
+            {
+                await SpinnerService.Show();
+                var imageToBeRemoved = DesignModel?.Images?.Where(x => x.Id == imageId).FirstOrDefault();
+                if (imageToBeRemoved != null)
+                    DesignModel?.Images?.Remove(imageToBeRemoved);
 
-            //var response = await HttpClient.DeleteAsync($"/api/designs/{DesignModel.Id}/images/{imageId}");
+                await DesignService.DeleteDesignImage(imageId);
 
-            //if (!response.IsSuccessStatusCode)
-            //{
-            //    ErrorMessage = await response.Content.ReadAsStringAsync();
-            //}
+                var itemRemove = ItemsData?.Select(x => x.DesignImages.Where(x => x.Id == imageId)).FirstOrDefault();
+                if (itemRemove != null)
+                    ItemsData?.Where(x => x.DesignImages.Remove((DesignImageResponse)itemRemove));
+
+                await ConfirmService.Clear();
+                StateHasChanged();
+
+            }
+            catch (Exception ex)
+            {
+                await SpinnerService.Hide();
+                ToastService.ShowError(ex.Message);
+            }
+            finally
+            {
+                await SpinnerService.Hide();
+            }
+
         }
 
-        private async Task RemoveImage(string imageId)
+        private async Task RemoveImage(Guid imageId)
         {
             await ConfirmService.Show($"Are you sure you want to remove this image?", "Yes",
                async () => await ConfirmedImageDelete(imageId), "Cancel",

@@ -5,6 +5,7 @@ using SwastiFashionHub.Common.Data.Request;
 using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Core;
 using SwastiFashionHub.Core.Services.Interface;
+using System.Security.Policy;
 
 namespace SwastiFashionHub.WebApi.Controllers
 {
@@ -13,7 +14,6 @@ namespace SwastiFashionHub.WebApi.Controllers
     public class DesignsController : ControllerBase
     {
         private readonly IDesignService _designService;
-        private static readonly string[] _validExtensions = { "jpg", "gif", "png", "jpeg" };
         private readonly IWebHostEnvironment _environment;
         public DesignsController(IDesignService designService,
             IWebHostEnvironment environment)
@@ -26,7 +26,7 @@ namespace SwastiFashionHub.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDesigns()
         {
-            var result = await _designService.GetAllAsync();
+            var result = await _designService.GetAllAsync(string.Empty);
             return Ok(result);
         }
 
@@ -67,52 +67,21 @@ namespace SwastiFashionHub.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDesign(Guid id)
         {
-            var basePath = $"{Constants.ImageStoreBasePath}\\{id}\\";
-            var fullPath = Path.Combine(_environment.ContentRootPath + basePath);
+            var basePath = $"{Constants.ImageStoreBasePath}";
+            var fullPath = Path.Combine(_environment.WebRootPath + basePath);
             var result = await _designService.DeleteAsync(id, fullPath);
             return Ok(result);
         }
 
-        //[HttpPost("[action]")]
-        //public async Task<IActionResult> UploadDesignAsync(List<IFormFile> files, string currentDirectory)
-        //{
-        //    try
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            var basePath = Path.Combine(Directory.GetCurrentDirectory() + $"\\uploads\\Design\\{currentDirectory}\\");
-        //            bool basePathExists = Directory.Exists(basePath);
-        //            if (!basePathExists) Directory.CreateDirectory(basePath);
-        //            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
-        //            var filePath = Path.Combine(basePath, file.FileName);
-        //            var extension = Path.GetExtension(file.FileName);
-        //            if (!System.IO.File.Exists(filePath))
-        //            {
-        //                using (var stream = new FileStream(filePath, FileMode.Create))
-        //                {
-        //                    await file.CopyToAsync(stream);
-        //                }
 
-        //                var designImagesRequest = new DesignImagesRequest
-        //                {
-        //                    DesignId = Guid.Parse(currentDirectory),
-        //                    FileType = file.ContentType,
-        //                    Extension = extension,
-        //                    Name = fileName,
-        //                    ImageUrl = filePath
-        //                };
-        //                await _designService.SaveDesignImageAsync(designImagesRequest);
-        //            }
-        //        }
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        // DELETE: api/Designs/5
+        [HttpDelete("{id}/images")]
+        public async Task<IActionResult> DeleteDesignImage(Guid id)
+        {
+            var result = await _designService.DeleteDesignImageAsync(id, _environment.WebRootPath);
+            return Ok(result);
+        }
 
-        //[HttpPost("[action]")]
         private async Task UploadFile(IFormFile file, string designId)
         {
             try
@@ -124,17 +93,20 @@ namespace SwastiFashionHub.WebApi.Controllers
                         var buffer = new byte[stream.Length];
                         await stream.ReadAsync(buffer, 0, (int)stream.Length);
 
+                        var extension = Path.GetExtension(file.FileName);
+
                         // Save the file to the file system
+                        string newImageName = string.Format("{0}.{1}", Guid.NewGuid().ToString(), extension);
                         var basePath = $"{Constants.ImageStoreBasePath}\\{designId}\\";
-                        var fullPath = Path.Combine(_environment.ContentRootPath + basePath);
+                        var fullPath = Path.Combine(_environment.WebRootPath + basePath);
                         bool basePathExists = Directory.Exists(fullPath);
                         if (!basePathExists) Directory.CreateDirectory(fullPath);
-                        System.IO.File.WriteAllBytes(fullPath + file.FileName, buffer);
+                        System.IO.File.WriteAllBytes(fullPath + newImageName, buffer);
 
                         // Save the file path to the database
                         var fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                        var filePath = Path.Combine(basePath, file.FileName);
-                        var extension = Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(basePath, newImageName);
+
                         var designImagesRequest = new DesignImagesRequest
                         {
                             DesignId = Guid.Parse(designId),
@@ -154,29 +126,5 @@ namespace SwastiFashionHub.WebApi.Controllers
                 throw ex;
             }
         }
-
-        //[HttpGet("{id}/images")]
-        //public async Task<ActionResult<IEnumerable<DesignImageResponse>>> GetImages(int id)
-        //{
-        //    var design = await _context.Designs.FindAsync(id);
-
-        //    if (design == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var designImages = await _context.DesignImages
-        //        .Where(di => di.DesignId == id)
-        //        .Select(di => new DesignImageDto
-        //        {
-        //            Id = di.Id,
-        //            DesignId = di.DesignId,
-        //            ImagePath = di.ImagePath,
-        //            FileName = di.FileName
-        //        })
-        //        .ToListAsync();
-
-        //    return Ok(designImages);
-        //}
     }
 }
