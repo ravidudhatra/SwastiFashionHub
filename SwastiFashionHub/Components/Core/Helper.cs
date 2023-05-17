@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Newtonsoft.Json.Linq;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace SwastiFashionHub.Components.Core
@@ -12,12 +13,22 @@ namespace SwastiFashionHub.Components.Core
         /// <param name="item">The object to read proprety from</param>
         /// <param name="propName">The property name</param>
         /// <returns></returns>
+        //public static T GetPropertyValue<T>(object item, string propName)
+        //{
+        //    return (T)item.GetType().GetProperty(propName).GetValue(item, null);
+        //}
+
         public static T GetPropertyValue<T>(object item, string propName)
         {
-            return (T)item.GetType().GetProperty(propName).GetValue(item, null);
+            var propertyInfo = item.GetType().GetProperty(propName);
+            if (propertyInfo == null)
+                throw new ArgumentException($"Property '{propName}' not found on type '{item.GetType().FullName}'");
+
+            var value = propertyInfo.GetValue(item);
+            if (value == null)
+                return default(T);
+            return (T)value;
         }
-
-
 
         /// <summary>
         /// Set given value to object

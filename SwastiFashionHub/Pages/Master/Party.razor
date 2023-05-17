@@ -1,0 +1,128 @@
+﻿@page "/master/parties"
+
+@layout MainLayout
+@inject IJSRuntime JsRuntime
+
+@using SwastiFashionHub.Common.Data.Response;
+@using SwastiFashionHub.Shared.Core.Models;
+@using System.Linq
+@using System.Reflection;
+@using SwastiFashionHub.Shared.Core.Services.Interface;
+@using SwastiFashionHub.Components.Data;
+@using SwastiFashionHub.Shared.Core.Enum
+@using Radzen.Blazor
+
+<Breadcrumb Title="Parties" BreadcrumbPageTitle="Master"></Breadcrumb>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <button class="btn font-16 btn-primary btn-block btn-sm mb-2" id="btn-new-event" @onclick="OnAddNewItemClick">
+                    <i class="mdi mdi-plus-circle-outline"></i>
+                    Create New Party
+                </button>
+
+                <table id="@TableId" class="table table-bordered dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Party Type</th>
+                            <th>Entry Date</th>
+                            <th class="nosort">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            @if (ItemsData != null && ItemsData.Count > 0)
+                            {
+
+                                @foreach (var item in ItemsData)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            <span>@Enum.GetName(typeof(PartyType), item.PartyType)</span>
+                                        </td>
+                                        <td>
+                                            <spam>@String.Format("{0:dd-MM-yyyy hh:mm tt}", item.CreatedDate)</spam>
+                                        </td>
+                                        <td class="action-icons">
+                                            <a href="javascript:void(0);" @onclick=@(()=> OnEditItemClick(item))
+                                           class="px-1  text-primary">
+                                                <i class="uil uil-pen font-size-18"></i>
+                                            </a>
+
+                                            <a href="javascript:void(0);" @onclick=@(()=> OnDeleteItemClick(item))
+                                           class="px-1 text-danger">
+                                                <i class="uil uil-trash-alt font-size-18"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr style="height: 5rem;">
+                                    <td colspan="5" style="text-align:center; font-size: 14px;">
+                                        No data found
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+<Dialog Title="Party"
+        IsOpen="@ShowModel"
+        IsOpenChanged="@((bool isOpen) => ShowModel = isOpen)">
+
+    <div class="modal-body p-4">
+        <EditForm Model="@PartyModel" OnValidSubmit="@HandleValidSubmit" class="needs-validation">
+            <DataAnnotationsValidator />
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label">Party Name</label>
+                        <InputText class="form-control"
+                                   placeholder="Party Name"
+                                   type="text"
+                                   name="PartyName"
+                                   required
+                                   @bind-Value="PartyModel.Name">
+                        </InputText>
+                        <ValidationMessage For="@(() => PartyModel.Name)" />
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label">Note</label>
+                        <InputSelect class="form-control" @bind-Value="@SelectedPartyType">
+                            @foreach (PartyType partyType in Enum.GetValues(typeof(PartyType)))
+                            {
+                                <option value="@partyType">@partyType.ToString()</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 text-end">
+                    <button type="button" class="btn btn-light me-1" @onclick="CloseModelClick">Close</button>
+                    <button type="submit" class="btn btn-success" id="btn-save-event">Save</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</Dialog>
+
+@code {
+
+    bool isLoading;
+    int count;
+}

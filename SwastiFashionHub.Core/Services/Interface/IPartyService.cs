@@ -1,19 +1,17 @@
-﻿using SwastiFashionHub.Core.Wrapper;
-using SwastiFashionHub.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Radzen;
+using SwastiFashionHub.Common.Data.Request;
+using SwastiFashionHub.Common.Data.Response;
+using SwastiFashionHub.Core.Wrapper;
 
 namespace SwastiFashionHub.Core.Services.Interface
 {
     public interface IPartyService
     {
-        Task<Result<Party>> GetAsync(Guid id);
-        Task<Result<List<Party>>> GetAllAsync(string search = "");
-        Task<Result<Guid>> SaveAsync(Party design);
-        Task<Result<Guid>> UpdateAsync(Party design);
+        Task<Result<PartyResponse>> GetAsync(Guid id);
+        Task<Result<List<PartyResponse>>> GetAllAsync();
+        Task<PaginatedResult<PartyResponse>> GetAllAsync(string search, int pageNumber, int pageSize, string? orderBy);
+        Task<Result<Guid>> SaveAsync(PartyRequest addRequestObject);
+        Task<Result<Guid>> UpdateAsync(PartyRequest updateRequestObject);
         Task<Result<Guid>> DeleteAsync(Guid id);
     }
 }

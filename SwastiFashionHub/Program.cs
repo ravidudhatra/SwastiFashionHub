@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Radzen;
 using SwastiFashionHub.Shared.Core.Extensions;
 using SwastiFashionHub.Shared.Core.Http;
 using SwastiFashionHub.Shared.Core.Services;
@@ -47,7 +48,9 @@ builder.Services.AddScoped<IHttpService, HttpService>()
     .AddScoped<IConfirmService, ConfirmService>()
     .AddScoped<IAlertService, AlertService>()
     .AddScoped<IDesignService, DesignService>()
+    .AddScoped<IPartyService, PartyService>()
     .AddScoped<SpinnerService>()
+    .AddScoped<DialogService>()
     .AddBlazoredLocalStorage();
 
 

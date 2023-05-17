@@ -51,7 +51,9 @@
                                             @if (AllowSelect)
                                             {
                                                 <td class="checkbox-col">
-                                                    <CheckBox Value=@(Helper.GetPropertyValue<bool>(item, "Selected")) @onchange=@(e=> SelectItem(item, true, idx))></CheckBox>
+                                                    <InputCheckbox Value=@(Helper.GetPropertyValue<bool>(item, "Selected"))
+                                                   @onchange=@(e=> SelectItem(item, true, idx))>
+                                                    </InputCheckbox>
                                                 </td>
                                             }
                                             @foreach (var column in columns)

@@ -8,6 +8,7 @@ function initMetisMenu() {
 }
 
 function initLeftMenuCollapse() {
+    
     var currentSIdebarSize = document.body.getAttribute('data-sidebar-size');
     $(window).on('load', function () {
 
@@ -23,6 +24,7 @@ function initLeftMenuCollapse() {
 
     $('.vertical-menu-btn').on('click', function (event) {
         event.preventDefault();
+        
         $('body').toggleClass('sidebar-enable');
         if ($(window).width() >= 992) {
             if (currentSIdebarSize == null) {
@@ -391,14 +393,4 @@ function initMenus() {
     initFullScreen();
     initHoriMenuActive();
     initRightSidebar();
-}
-
-
-//Spinner
-function hideSpinner() {
-    document.getElementById('spinner').classList.add("hide")
-}
-
-function showSpinner() {
-    document.getElementById('spinner').classList.remove("hide")
 }

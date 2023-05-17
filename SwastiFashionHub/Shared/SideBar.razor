@@ -1,4 +1,8 @@
-﻿<!-- ========== Left Sidebar Start ========== -->
+﻿@code {
+    bool sidebar1Expanded = true;
+}
+
+<!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
 
     <!-- LOGO -->
@@ -34,6 +38,16 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
 
+                @*<RadzenPanelMenu Multiple="@multiple">
+                <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="home" />
+
+                <RadzenPanelMenuItem Text="Master" Icon="tab">
+                <RadzenPanelMenuItem Text="Design" Path="/master/designs" Icon="perm_media" />
+                <RadzenPanelMenuItem Text="Parties" Path="/master/parties" Icon="account_circle" />
+                </RadzenPanelMenuItem>
+                </RadzenPanelMenu>
+                *@
+
                 <li>
                     <a href="/">
                         <i class="uil-home-alt"></i>
@@ -49,6 +63,12 @@
                         <span>Design</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/master/parties" class="waves-effect">
+                        <i class="uil-book-alt"></i>
+                        <span>Parties</span>
+                    </a>
+                </li>
 
             </ul>
         </div>
@@ -56,3 +76,6 @@
     </div>
 </div>
 <!-- Left Sidebar End -->
+@code {
+    bool multiple = true;
+}

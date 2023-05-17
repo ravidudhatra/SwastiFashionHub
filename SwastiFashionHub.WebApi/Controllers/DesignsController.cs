@@ -26,7 +26,20 @@ namespace SwastiFashionHub.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDesigns()
         {
-            var result = await _designService.GetAllAsync(string.Empty);
+            var result = await _designService.GetAllAsync();
+            return Ok(result);
+        }
+
+        // GET: api/Designs
+        [HttpGet("ByPagination")]
+        public async Task<IActionResult> GetDesigns([FromQuery] PaginatedRequest paginatedRequest)
+        {
+            var result = await _designService.GetAllAsync(
+                paginatedRequest.Search ?? string.Empty,
+                paginatedRequest.PageNumber,
+                paginatedRequest.PageSize,
+                paginatedRequest.OrderBy);
+
             return Ok(result);
         }
 
@@ -41,9 +54,18 @@ namespace SwastiFashionHub.WebApi.Controllers
         // PUT: api/Designs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDesign(Guid id, [FromBody] DesignRequest design)
+        public async Task<IActionResult> PutDesign(Guid id, [FromForm] DesignRequest design)
         {
             var result = await _designService.UpdateAsync(design);
+
+            if (design.Id != Guid.Empty)
+            {
+                if (design.NewImages != null)
+                {
+                    foreach (var item in design.NewImages)
+                        await UploadFile(item, design.Id.ToString());
+                }
+            }
             return Ok(result);
         }
 
@@ -54,7 +76,9 @@ namespace SwastiFashionHub.WebApi.Controllers
         {
             var result = await _designService.SaveAsync(design);
 
-            if (design.Id != Guid.Empty)
+            if (design.Id != Guid.Empty
+                && design.NewImages != null
+                && design.NewImages.Count > 0)
             {
                 foreach (var item in design.NewImages)
                     await UploadFile(item, design.Id.ToString());

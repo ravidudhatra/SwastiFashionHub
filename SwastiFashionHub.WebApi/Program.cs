@@ -13,7 +13,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IDesignService, DesignService>();
+
+builder.Services
+    .AddScoped<IDesignService, DesignService>()
+    .AddScoped<IPartyService, PartyService>();
+
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddDbContext<SwastiFashionHubLlpContext>(options =>
@@ -25,8 +29,10 @@ builder.Services.AddDbContext<SwastiFashionHubLlpContext>(options =>
             errorNumbersToAdd: null);
     }));
 
-var config = new MapperConfiguration(c => {
+var config = new MapperConfiguration(c =>
+{
     c.AddProfile<DesignMapper>();
+    c.AddProfile<PartyMapper>();
 });
 
 builder.Services.AddSingleton<IMapper>(s => config.CreateMapper());

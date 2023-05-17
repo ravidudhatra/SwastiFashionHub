@@ -13,9 +13,10 @@ namespace SwastiFashionHub.Core.Services.Interface
     public interface IDesignService
     {
         Task<Result<DesignResponse>> GetAsync(Guid id);
-        Task<Result<List<DesignResponse>>> GetAllAsync(string search = "");
-        Task<Result<Guid>> SaveAsync(DesignRequest design);
-        Task<Result<Guid>> UpdateAsync(DesignRequest design);
+        Task<Result<List<DesignResponse>>> GetAllAsync();
+        Task<PaginatedResult<DesignResponse>> GetAllAsync(string search, int pageNumber, int pageSize, string? orderBy);
+        Task<Result<Guid>> SaveAsync(DesignRequest addRequestObject);
+        Task<Result<Guid>> UpdateAsync(DesignRequest updateRequestObject);
         Task<Result<Guid>> DeleteAsync(Guid id, string imagePath);
 
 

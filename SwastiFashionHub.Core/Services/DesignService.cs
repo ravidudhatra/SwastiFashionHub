@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SwastiFashionHub.Common.Data.Request;
 using SwastiFashionHub.Common.Data.Response;
+using SwastiFashionHub.Core.Exceptions;
+using SwastiFashionHub.Core.Extensions;
 using SwastiFashionHub.Core.Services.Interface;
 using SwastiFashionHub.Core.Wrapper;
 using SwastiFashionHub.Data.Context;
@@ -23,14 +25,18 @@ namespace SwastiFashionHub.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<Guid>> SaveAsync(DesignRequest design)
+        public async Task<Result<Guid>> SaveAsync(DesignRequest addRequestObject)
         {
             try
             {
                 if (_context.Designs == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                var objModel = _mapper.Map<Design>(design);
+                var isExists = _context.Designs.Any(x => x.Name == addRequestObject.Name);
+                if (isExists)
+                    return await Result<Guid>.FailAsync("Design already exists");
+
+                var objModel = _mapper.Map<Design>(addRequestObject);
                 objModel.CreatedDate = DateTime.Now;
                 objModel.CreatedBy = 0; //todo: get logged in user id and set it.
 
@@ -38,7 +44,7 @@ namespace SwastiFashionHub.Core.Services
 
                 await _context.SaveChangesAsync();
 
-                return await Result<Guid>.SuccessAsync(design.Id, "Design saved successfully");
+                return await Result<Guid>.SuccessAsync(addRequestObject.Id, "Design saved successfully");
             }
             catch (Exception ex)
             {
@@ -46,27 +52,27 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<Guid>> UpdateAsync(DesignRequest design)
+        public async Task<Result<Guid>> UpdateAsync(DesignRequest updateRequestObject)
         {
             try
             {
                 if (_context.Designs == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                var objModel = await _context.Designs.FindAsync(design.Id);
+                var objModel = await _context.Designs.FindAsync(updateRequestObject.Id);
 
                 if (objModel == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
                 objModel.UpdatedDate = DateTime.Now;
                 objModel.UpdatedBy = 0; //todo: get logged in user id and set it.
-                objModel.Name = design.Name;
-                objModel.Note = design.Note;
+                objModel.Name = updateRequestObject.Name;
+                objModel.Note = updateRequestObject.Note;
 
                 _context.Entry(objModel).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return await Result<Guid>.SuccessAsync(design.Id, "Design updated successfully");
+                return await Result<Guid>.SuccessAsync(updateRequestObject.Id, "Design updated successfully");
             }
             catch (Exception ex)
             {
@@ -94,7 +100,7 @@ namespace SwastiFashionHub.Core.Services
             }
         }
 
-        public async Task<Result<List<DesignResponse>>> GetAllAsync(string search = "")
+        public async Task<Result<List<DesignResponse>>> GetAllAsync()
         {
             try
             {
@@ -119,10 +125,8 @@ namespace SwastiFashionHub.Core.Services
                                                      }).ToList()
                                  }).AsQueryable();
 
-                if (!string.IsNullOrWhiteSpace(search))
-                    queryable = queryable.Where(x => x.Name.ToLower().Contains(search.ToLower())).Distinct();
-
                 var query = await queryable.AsNoTracking().ToListAsync();
+                
                 if (query == null)
                     return await Result<List<DesignResponse>>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
@@ -132,6 +136,57 @@ namespace SwastiFashionHub.Core.Services
             catch (Exception ex)
             {
                 return await Result<List<DesignResponse>>.FailAsync("Failed");
+            }
+        }
+        public async Task<PaginatedResult<DesignResponse>> GetAllAsync(string search, int pageNumber, int pageSize, string? orderBy)
+        {
+            try
+            {
+                if (_context.Parties == null)
+                {
+                    var exception = new CustomException("Not Found!", HttpStatusCode.NotFound);
+                    throw exception;
+                }
+
+                var queryable = (from design in _context.Designs.Where(x => x.IsArchived == false)
+                                 select new DesignResponse
+                                 {
+                                     Id = design.Id,
+                                     CreatedBy = design.CreatedBy,
+                                     CreatedDate = design.CreatedDate,
+                                     Name = design.Name,
+                                     Note = design.Note,
+                                     UpdatedBy = design.UpdatedBy,
+                                     DesignImages = (from designImages in _context.DesignImages.Where(x => x.DesignId == design.Id)
+                                                     select new DesignImageResponse
+                                                     {
+                                                         Id = designImages.Id,
+                                                         DesignId = design.Id,
+                                                         ImageUrl = designImages.ImageUrl
+                                                     }).ToList()
+                                 }).AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search))
+                    queryable = queryable.Where(x => x.Name.ToLower().Contains(search.ToLower())).Distinct();
+
+                if (queryable == null || queryable.Count() <= 0)
+                {
+                    PaginatedResult<DesignResponse> emptyQueryResponse = new PaginatedResult<DesignResponse>(null);
+                    return emptyQueryResponse;
+                }
+
+                var response = await queryable.AsNoTracking().ToPaginatedListAsync(pageNumber, pageSize, orderBy);
+
+                PaginatedResult<DesignResponse> responseQuery = new PaginatedResult<DesignResponse>(response.Data);
+                responseQuery.TotalCount = response.TotalCount;
+                responseQuery.CurrentPage = response.CurrentPage;
+                responseQuery.TotalPages = response.TotalPages;
+                responseQuery.PageSize = response.PageSize;
+                return responseQuery;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 

@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using SwastiFashionHub.Common.Data.Request;
 using SwastiFashionHub.Common.Data.Response;
 using SwastiFashionHub.Shared.Core.Common;
+using SwastiFashionHub.Shared.Core.Exceptions;
 using SwastiFashionHub.Shared.Core.Services;
 using SwastiFashionHub.Shared.Core.Services.Interface;
-
+using System.Data;
 
 namespace SwastiFashionHub.Pages.Master
 {
@@ -34,10 +38,30 @@ namespace SwastiFashionHub.Pages.Master
 
         private List<DesignResponse>? ItemsData;
         private DesignRequest? DesignModel = new();
+        private Guid TableId { get; set; }
 
         protected override void OnInitialized()
         {
             _baseUrl = Configuration.GetValue<string>("BaseUrl");
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                TableId = Guid.NewGuid();
+                await BindDataAsync();
+
+                var options = new
+                {
+                    paging = true,
+                    stateSave = true,
+                    searching = true,
+                    ordering = true
+                };
+
+                await JsRuntime.InvokeAsync<DataTable>("dataTable.init", TableId.ToString(), options);
+            }
         }
 
         private async Task HandleFileSelectionAsync(InputFileChangeEventArgs e)
@@ -68,6 +92,11 @@ namespace SwastiFashionHub.Pages.Master
 
                 DesignModel.NewImages = NewImages;
             }
+            catch (AppException ex)
+            {
+                if (ex.Exceptions.Count > 0)
+                    ToastService.ShowWarning(String.Join(", ", ex.Exceptions));
+            }
             catch (Exception ex)
             {
                 ToastService.ShowError(ex.Message);
@@ -89,21 +118,26 @@ namespace SwastiFashionHub.Pages.Master
                     DesignModel.Id = Guid.NewGuid();
                     await DesignService.Add(DesignModel);
                     ToastService.ShowSuccess("Design save successfully.");
-                    await BindDataAsync();
                 }
+
+                await BindDataAsync();
+
+                await JsRuntime.InvokeAsync<DataTable>("dataTable.refreshDataTable");
+                DesignModel = new DesignRequest();
+                ShowModel = false;
+            }
+            catch (AppException ex)
+            {
+                if (ex.Exceptions.Count > 0)
+                    ToastService.ShowWarning(String.Join(", ", ex.Exceptions));
             }
             catch (Exception ex)
             {
                 ToastService.ShowError(ex.Message);
             }
-            finally
-            {
-                DesignModel = new DesignRequest();
-                ShowModel = false;
-            }
         }
 
-        private void OnShowModelClick()
+        private void OnAddNewItemClick()
         {
             DesignModel = new DesignRequest();
             ShowModel = true;
@@ -116,14 +150,6 @@ namespace SwastiFashionHub.Pages.Master
             StateHasChanged();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                await BindDataAsync();
-                StateHasChanged();
-            }
-        }
 
         private async Task BindDataAsync()
         {
@@ -150,20 +176,6 @@ namespace SwastiFashionHub.Pages.Master
         public void OnInputFile()
         {
             ErrorMessage = string.Empty;
-        }
-
-        public static byte[] ReadFully(Stream input)
-        {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
-            }
         }
 
         private async Task OnEditItemClick(DesignResponse item)
@@ -215,7 +227,13 @@ namespace SwastiFashionHub.Pages.Master
                 //todo:close modal
                 ToastService.ShowSuccess($"{design.Name} deleted!");
                 await BindDataAsync();
+                await JsRuntime.InvokeAsync<DataTable>("dataTable.refreshDataTable", ItemsData);
                 StateHasChanged();
+            }
+            catch (AppException ex)
+            {
+                if (ex.Exceptions.Count > 0)
+                    ToastService.ShowWarning(String.Join(", ", ex.Exceptions));
             }
             catch (Exception ex)
             {
@@ -228,10 +246,9 @@ namespace SwastiFashionHub.Pages.Master
             }
         }
 
-        private string GetImageLink(DesignImagesRequest item)
+        private string GetImageLink(string imageUrl)
         {
-            return string.Format("{0}/{1}", _baseUrl, item.ImageUrl);
-
+            return string.Format("{0}/{1}", _baseUrl, imageUrl);
         }
 
         private async Task ConfirmedImageDelete(Guid imageId)
@@ -252,6 +269,11 @@ namespace SwastiFashionHub.Pages.Master
                 await ConfirmService.Clear();
                 StateHasChanged();
 
+            }
+            catch (AppException ex)
+            {
+                if (ex.Exceptions.Count > 0)
+                    ToastService.ShowWarning(String.Join(", ", ex.Exceptions));
             }
             catch (Exception ex)
             {

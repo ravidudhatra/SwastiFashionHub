@@ -13,10 +13,10 @@ namespace SwastiFashionHub.Shared.Core.Services.Interface
     {
         Task<DesignResponse> Get(Guid id);
         Task<List<DesignResponse>> GetAll();
-        Task<object> Add(DesignRequest design);
-        Task<object> Update(DesignRequest updatedesign);
+        Task<object> Add(DesignRequest addRequestObject);
+        Task<object> Update(DesignRequest updateRequestObject);
         Task Delete(Guid id);
-        Task<string> GetImage(Guid designId, Guid imageId);
+        Task<string> GetImage(Guid id, Guid imageId);
         Task DeleteDesignImage(Guid imageId);
     }
 }

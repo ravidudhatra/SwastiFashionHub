@@ -27,9 +27,13 @@
     <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="~/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-    
+
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    
+
+    @*Radzen material theme*@
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css">
+    @*<link rel="stylesheet" href="_content/Radzen.Blazor/css/standard-base.css">*@
+
     <link href="SwastiFashionHub.styles.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <component type="typeof(HeadOutlet)" render-mode="Server" />
@@ -66,20 +70,22 @@
     <!-- Datatable init js -->
     <script src="~/assets/js/pages/datatables.init.js"></script>
 
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+
     <!-- App js -->
     <script src="~/assets/js/app.js"></script>
 
     <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+    <environment include="Staging,Production">
+    An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+    An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
     </div>
 
     <script src="_framework/blazor.server.js"></script>
-</body>
-</html>
+    </body>
+    </html>

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="BuildWebCompiler2022" Version="1.14.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Radzen.Blazor" Version="4.10.3" />
   </ItemGroup>
 
   <ItemGroup>

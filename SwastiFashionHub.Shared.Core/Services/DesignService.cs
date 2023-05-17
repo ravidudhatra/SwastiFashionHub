@@ -42,11 +42,11 @@ namespace SwastiFashionHub.Shared.Core.Services
             return result.Data;
         }
 
-        public async Task<object> Add(DesignRequest design)
+        public async Task<object> Add(DesignRequest addRequestObject)
         {
             try
             {
-                var formData = ConvertToFormData(design);
+                var formData = ConvertToFormData(addRequestObject);
 
                 var httpResponse = await httpService.Post($"{baseURL}", formData);
                 var result = await httpResponse.GetResult();
@@ -63,17 +63,30 @@ namespace SwastiFashionHub.Shared.Core.Services
             }
         }
 
-        public async Task<object> Update(DesignRequest updatedesign)
+        public async Task<object> Update(DesignRequest updateRequestObject)
         {
-            var httpResponse = await httpService.Put<DesignRequest, object>($"{baseURL}/{updatedesign.Id}", updatedesign);
-            var result = await httpResponse.GetResult();
-            if (!httpResponse.Success || !result.IsSucceeded)
+            try
             {
-                var errors = await httpResponse.GetErrors();
-                throw new AppException(errors);
+                var formData = ConvertToFormData(updateRequestObject);
+
+                var httpResponse = await httpService.Put($"{baseURL}/{updateRequestObject.Id}", formData);
+                var result = await httpResponse.GetResult();
+
+                if (!httpResponse.Success || !result.IsSucceeded)
+                {
+                    var errors = await httpResponse.GetErrors();
+                    throw new AppException(errors);
+                }
+                return result.Data;
+
             }
-            return result.Data;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
+
+
 
         public async Task Delete(Guid id)
         {
@@ -86,9 +99,9 @@ namespace SwastiFashionHub.Shared.Core.Services
             }
         }
 
-        public async Task<string> GetImage(Guid designId, Guid imageId)
+        public async Task<string> GetImage(Guid id, Guid imageId)
         {
-            var httpResponse = await httpService.Get<string>($"{baseURL}/{designId}/images/{imageId}/");
+            var httpResponse = await httpService.Get<string>($"{baseURL}/{id}/images/{imageId}/");
             var result = await httpResponse.GetResult();
             if (!httpResponse.Success || !result.IsSucceeded)
             {

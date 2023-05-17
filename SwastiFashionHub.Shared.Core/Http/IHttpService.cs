@@ -15,5 +15,6 @@ namespace SwastiFashionHub.Shared.Core.Http
         Task<HttpResponseWrapper<object>> Put<T>(string url, T data, CancellationToken cancellationToken = default);
         Task<HttpResponseWrapper<TResponse>> Put<T, TResponse>(string url, T data, CancellationToken cancellationToken = default);
         Task<HttpResponseWrapper<object>> Post(string url, MultipartFormDataContent data, CancellationToken cancellationToken = default);
+        Task<HttpResponseWrapper<object>> Put(string url, MultipartFormDataContent data, CancellationToken cancellationToken = default);
     }
 }

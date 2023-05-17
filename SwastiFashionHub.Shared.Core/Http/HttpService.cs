@@ -17,7 +17,7 @@ namespace SwastiFashionHub.Shared.Core.Http
         private readonly ILogger<HttpService> _logger;
 
         private readonly List<string> _identitiesURLs = new()
-        {     
+        {
             "login",
             "confirm-email",
             "confirm-register",
@@ -96,12 +96,18 @@ namespace SwastiFashionHub.Shared.Core.Http
 
         public async Task<HttpResponseWrapper<object>> Post(string url, MultipartFormDataContent data, CancellationToken cancellationToken = default)
         {
-            //var response =
-            //   await _httpClient.PostAsync(url, data);
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = data;
             var response = await SendRequest(request);
             return await CreateResponseAsync<object>(response, url, null, "POST");
+        }
+
+        public async Task<HttpResponseWrapper<object>> Put(string url, MultipartFormDataContent data, CancellationToken cancellationToken = default)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, url);
+            request.Content = data;
+            var response = await SendRequest(request);
+            return await CreateResponseAsync<object>(response, url, null, "PUT");
         }
 
         public async Task<HttpResponseWrapper<object>> Put<T>(string url, T data, CancellationToken cancellationToken = default)
