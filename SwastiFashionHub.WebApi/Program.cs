@@ -16,7 +16,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddScoped<IDesignService, DesignService>()
-    .AddScoped<IPartyService, PartyService>();
+    .AddScoped<IPartyService, PartyService>()
+    .AddScoped<IFabricService, FabricService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
@@ -33,6 +34,7 @@ var config = new MapperConfiguration(c =>
 {
     c.AddProfile<DesignMapper>();
     c.AddProfile<PartyMapper>();
+    c.AddProfile<FabricMapper>();
 });
 
 builder.Services.AddSingleton<IMapper>(s => config.CreateMapper());

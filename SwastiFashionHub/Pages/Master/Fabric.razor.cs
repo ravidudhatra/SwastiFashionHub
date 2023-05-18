@@ -12,10 +12,10 @@ using Microsoft.JSInterop;
 
 namespace SwastiFashionHub.Pages.Master
 {
-    public partial class Party
+    public partial class Fabric
     {
         [Inject]
-        public IPartyService? PartyService { get; set; }
+        public IFabricService? FabricService { get; set; }
 
         [Inject]
         public IToastService? ToastService { get; set; }
@@ -31,10 +31,10 @@ namespace SwastiFashionHub.Pages.Master
 
         public string? ErrorMessage { get; set; }
         public bool ShowModel { get; set; } = false;
-        private List<PartyResponse>? ItemsData;
+        private List<FabricResponse>? ItemsData;
 
-        private PartyRequest? PartyModel = new();
-        public PartyType SelectedPartyType { get; set; }
+        private FabricRequest? FabricModel = new();
+        public FabricType SelectedFabricType { get; set; }
         int totalCount = 0;
 
         private Guid TableId { get; set; }
@@ -60,19 +60,16 @@ namespace SwastiFashionHub.Pages.Master
             try
             {
                 ToastService.ClearAll();
-                if (PartyModel != null && PartyModel.Id != Guid.Empty)
+                if (FabricModel != null && FabricModel.Id != Guid.Empty)
                 {
-                    PartyModel.PartyType = (int)SelectedPartyType;
-                    await PartyService.Update(PartyModel);
-                    ToastService.ShowSuccess("Party updated successfully.");
+                    await FabricService.Update(FabricModel);
+                    ToastService.ShowSuccess("Fabric updated successfully.");
                 }
                 else
                 {
-                    PartyModel.PartyType = (int)SelectedPartyType;
-                    PartyModel.Id = Guid.NewGuid();
-                    await PartyService.Add(PartyModel);
-                    ToastService.ShowSuccess("Party save successfully.");
-                    await BindDataAsync();
+                    FabricModel.Id = Guid.NewGuid();
+                    await FabricService.Add(FabricModel);
+                    ToastService.ShowSuccess("Fabric save successfully.");
                 }
             }
             catch (AppException ex)
@@ -88,15 +85,14 @@ namespace SwastiFashionHub.Pages.Master
             {
                 await BindDataAsync();
                 await JsRuntime.InvokeAsync<DataTable>("dataTable.refreshDataTable");
-                PartyModel = new PartyRequest();
+                FabricModel = new FabricRequest();
                 ShowModel = false;
             }
         }
 
         private async Task OnAddNewItemClick()
         {
-            PartyModel = new PartyRequest();
-            SelectedPartyType = PartyType.Buyer;
+            FabricModel = new FabricRequest();
             ShowModel = true;
             StateHasChanged();
         }
@@ -110,59 +106,57 @@ namespace SwastiFashionHub.Pages.Master
         private async Task BindDataAsync()
         {
             await SpinnerService.Show();
-            var PartyData = await PartyService.GetAll();
+            var FabricData = await FabricService.GetAll();
 
-            ItemsData = PartyData.Select(x => new PartyResponse
+            ItemsData = FabricData.Select(x => new FabricResponse
             {
                 CreatedDate = x.CreatedDate,
                 Id = x.Id,
                 Name = x.Name,
-                PartyType = x.PartyType
             }).ToList();
 
-            totalCount = PartyData?.Count ?? 0;
+            totalCount = FabricData?.Count ?? 0;
             await SpinnerService.Hide();
             StateHasChanged();
         }
 
-        private async Task OnEditItemClick(PartyResponse item)
+        private async Task OnEditItemClick(FabricResponse item)
         {
             if (ItemsData == null)
                 ToastService.ShowError("Item data missing.");
             else
             {
-                PartyModel = ItemsData?
-                    .Select(x => new PartyRequest
+                FabricModel = ItemsData?
+                    .Select(x => new FabricRequest
                     {
                         Id = item.Id,
                         CreatedBy = item.CreatedBy,
                         Name = item.Name,
-                        PartyType = item.PartyType,
                     }).FirstOrDefault(x => x.Id == item.Id);
 
                 ShowModel = true;
-                SelectedPartyType = (PartyType)PartyModel.PartyType;
             }
 
             await Task.CompletedTask;
         }
-        private async Task OnDeleteItemClick(PartyResponse item)
+        private async Task OnDeleteItemClick(FabricResponse item)
         {
             await ConfirmService.Show($"Are you sure you want to delete {item.Name}?", "Yes",
         async () => await ConfirmedDelete(item), "Cancel",
         async () => await ConfirmService.Clear());
         }
 
-        public async Task ConfirmedDelete(PartyResponse party)
+        public async Task ConfirmedDelete(FabricResponse Fabric)
         {
             try
             {
                 await ConfirmService.Clear();
                 await SpinnerService.Show();
-                await PartyService.Delete(party.Id);
+                await FabricService.Delete(Fabric.Id);
                 await SpinnerService.Hide();
 
-                ToastService.ShowSuccess($"{party.Name} deleted!");
+                ToastService.ShowSuccess($"{Fabric.Name} deleted!");
+
                 await BindDataAsync();
                 StateHasChanged();
             }

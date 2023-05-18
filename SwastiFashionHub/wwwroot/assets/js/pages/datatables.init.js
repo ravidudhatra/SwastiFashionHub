@@ -29,7 +29,6 @@ window.dataTable = {
     },
 
     refreshDataTable: function () {
-        debugger
         // Redraw the DataTable
         dataTableObj.draw();
     },

@@ -20,4 +20,11 @@ namespace SwastiFashionHub.Shared.Core.Enum
         Job = 1,
         Fabric = 2
     }
+
+    public enum FabricType
+    {
+        Self = 0,
+        Party = 1
+    }
+    
 }

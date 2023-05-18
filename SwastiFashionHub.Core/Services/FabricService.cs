@@ -183,17 +183,7 @@ namespace SwastiFashionHub.Core.Services
                 if (data == null)
                     return await Result<Guid>.ReturnErrorAsync("Not Found", (int)HttpStatusCode.NotFound);
 
-                //var FabricImagesData = await _context.FabricImages.Where(x => x.FabricId == id).ToListAsync();
-
-                //_context.FabricImages.RemoveRange(FabricImagesData);
-                //_context.Fabrics.Remove(data);
-
-                ////remove images from server
-                //string directoryPath = string.Format("{0}/{1}", imagePath, id.ToString());
-                //bool basePathExists = Directory.Exists(directoryPath);
-                //if (basePathExists)
-                //    Directory.Delete(directoryPath, true);
-
+                _context.Fabrics.Remove(data);
                 await _context.SaveChangesAsync();
 
                 return await Result<Guid>.SuccessAsync(id, "Fabric deleted successfully");

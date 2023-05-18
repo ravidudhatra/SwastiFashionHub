@@ -119,12 +119,6 @@ namespace SwastiFashionHub.Pages.Master
                     await DesignService.Add(DesignModel);
                     ToastService.ShowSuccess("Design save successfully.");
                 }
-
-                await BindDataAsync();
-
-                await JsRuntime.InvokeAsync<DataTable>("dataTable.refreshDataTable");
-                DesignModel = new DesignRequest();
-                ShowModel = false;
             }
             catch (AppException ex)
             {
@@ -134,6 +128,13 @@ namespace SwastiFashionHub.Pages.Master
             catch (Exception ex)
             {
                 ToastService.ShowError(ex.Message);
+            }
+            finally
+            {
+                await BindDataAsync();
+                await JsRuntime.InvokeAsync<DataTable>("dataTable.refreshDataTable");
+                DesignModel = new DesignRequest();
+                ShowModel = false;
             }
         }
 

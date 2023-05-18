@@ -52,7 +52,7 @@ namespace SwastiFashionHub.WebApi.Controllers
         // PUT: api/Fabrics/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFabric(Guid id, [FromForm] FabricRequest Fabric)
+        public async Task<IActionResult> PutFabric(Guid id, [FromBody] FabricRequest Fabric)
         {
             var result = await _Fabricservice.UpdateAsync(Fabric);
             return Ok(result);
@@ -61,7 +61,7 @@ namespace SwastiFashionHub.WebApi.Controllers
         // POST: api/Fabrics
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<IActionResult> PostFabric([FromForm] FabricRequest Fabric)
+        public async Task<IActionResult> PostFabric([FromBody] FabricRequest Fabric)
         {
             var result = await _Fabricservice.SaveAsync(Fabric);
             return Ok(result);

@@ -49,6 +49,7 @@ builder.Services.AddScoped<IHttpService, HttpService>()
     .AddScoped<IAlertService, AlertService>()
     .AddScoped<IDesignService, DesignService>()
     .AddScoped<IPartyService, PartyService>()
+    .AddScoped<IFabricService, FabricService>()
     .AddScoped<SpinnerService>()
     .AddScoped<DialogService>()
     .AddBlazoredLocalStorage();

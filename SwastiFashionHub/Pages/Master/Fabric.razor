@@ -1,4 +1,4 @@
-﻿@page "/master/parties"
+﻿@page "/master/fabrics"
 
 @layout MainLayout
 @inject IJSRuntime JsRuntime
@@ -12,7 +12,7 @@
 @using SwastiFashionHub.Shared.Core.Enum
 @using Radzen.Blazor
 
-<Breadcrumb Title="Parties" BreadcrumbPageTitle="Master"></Breadcrumb>
+<Breadcrumb Title="Fabrics" BreadcrumbPageTitle="Master"></Breadcrumb>
 
 <div class="row">
     <div class="col-12">
@@ -28,7 +28,6 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Party Type</th>
                             <th>Entry Date</th>
                             <th class="nosort">Action</th>
                         </tr>
@@ -42,9 +41,6 @@
                                 {
                                     <tr>
                                         <td>@item.Name</td>
-                                        <td>
-                                            <span>@Enum.GetName(typeof(PartyType), item.PartyType)</span>
-                                        </td>
                                         <td>
                                             <spam>@String.Format("{0:dd-MM-yyyy hh:mm tt}", item.CreatedDate)</spam>
                                         </td>
@@ -70,36 +66,25 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-<Dialog Title="Party"
+<Dialog Title="Fabric"
         IsOpen="@ShowModel"
         IsOpenChanged="@((bool isOpen) => ShowModel = isOpen)">
 
     <div class="modal-body p-4">
-        <EditForm Model="@PartyModel" OnValidSubmit="@HandleValidSubmit" class="needs-validation">
+        <EditForm Model="@FabricModel" OnValidSubmit="@HandleValidSubmit" class="needs-validation">
             <DataAnnotationsValidator />
             <div class="row">
                 <div class="col-12">
                     <div class="mb-3">
-                        <label class="form-label">Party Name</label>
+                        <label class="form-label">Fabric Name</label>
                         <InputText class="form-control"
-                                   placeholder="Party Name"
+                                   placeholder="Fabric Name"
                                    type="text"
-                                   name="PartyName"
+                                   name="FabricName"
                                    required
-                                   @bind-Value="PartyModel.Name">
+                                   @bind-Value="FabricModel.Name">
                         </InputText>
-                        <ValidationMessage For="@(() => PartyModel.Name)" />
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="mb-3">
-                        <label class="form-label">Note</label>
-                        <InputSelect class="form-control" @bind-Value="@SelectedPartyType">
-                            @foreach (PartyType partyType in Enum.GetValues(typeof(PartyType)))
-                            {
-                                <option value="@partyType">@partyType.ToString()</option>
-                            }
-                        </InputSelect>
+                        <ValidationMessage For="@(() => FabricModel.Name)" />
                     </div>
                 </div>
             </div>
