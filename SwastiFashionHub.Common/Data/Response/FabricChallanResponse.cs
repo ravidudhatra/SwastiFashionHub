@@ -20,7 +20,10 @@ namespace SwastiFashionHub.Common.Data.Response
 
         [DisplayName("Challan Date")]
         public DateTime ChallanDate { get; set; }
-
+        
+        [DisplayName("Entrty Date")]
+        public DateTime CreatedDate { get; set; }
+        
         public Guid FabricId { get; set; }
 
         public int FabricType { get; set; }

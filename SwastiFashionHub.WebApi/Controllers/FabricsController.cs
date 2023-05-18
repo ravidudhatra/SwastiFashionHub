@@ -74,5 +74,7 @@ namespace SwastiFashionHub.WebApi.Controllers
             var result = await _Fabricservice.DeleteAsync(id);
             return Ok(result);
         }
+
+
     }
 }

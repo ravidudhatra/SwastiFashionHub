@@ -24,7 +24,8 @@ window.dataTable = {
                 }],
                 paging: options.paging,
                 searching: options.searching,
-                ordering: options.ordering
+                ordering: options.ordering,
+                stateSave: true
             });
     },
 
